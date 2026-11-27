@@ -1,0 +1,16 @@
+<div class="reading-layout">
+  <article class="reading">$body$</article>
+  $if(table-of-contents)$
+  <aside class="contents" aria-label="Section navigation">
+    <details open>
+      <summary>On this page</summary>
+      <nav aria-label="Page contents">$table-of-contents$</nav>
+    </details>
+    <script>
+      if (window.matchMedia('(max-width: 58rem)').matches) {
+        document.currentScript.previousElementSibling.open = false;
+      }
+    </script>
+  </aside>
+  $endif$
+</div>
