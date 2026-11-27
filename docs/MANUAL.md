@@ -1,6 +1,6 @@
 # Player manual
 
-[Install, update or restore your dial](INSTALL.md) · [What the dial can do](FEATURES.md)
+[Install, update or restore your dial](INSTALL.md) · [What the dial can do](FEATURES.md) · [Gesture reference](#gesture-reference)
 
 **Start at the character sheet.** Tap the portrait whenever you want a handful of dice. Swipe sideways or turn the ring to change the two shortcuts beside it. A right swipe on a detail screen takes you back one step.
 
@@ -11,6 +11,42 @@
 Swipe **up** on the sheet to open Health from any pair. Jump to [Pack and Purse](#use-your-pack-and-purse), [Turn](#track-your-turn), [HP and death saves](#hit-points-death-saves-and-stabilization), [roll reminders](#received-roll-effects), [phone setup](#set-up-at-the-table), [the dice tray](#build-a-dice-pool), [casting](#cast-a-spell), or [the Forge Artificer](#playing-a-forge-artificer). To see what the engine handles for your character’s books, open [rulebooks and expansions](RULES.md#rulebooks-and-expansions).
 
 The Forge, Health, Effects, Pack and Turn illustrations are Mac renders of the dial screens using example characters. Other play screens were captured on the dial. Phone illustrations show the English setup with example data. Your own sheet supplies the totals and available options.
+
+## Gesture reference
+
+**To reach your hit points:** start on the open character sheet, slide one finger upward across the glass, then lift. A stationary tap on the portrait opens Dice. If swiping is awkward, turn the ring until **Health / Effects** appears and tap **Health** on the left. Both routes open the same HP screen.
+
+### From the character sheet
+
+| Where you start | What to do | Where you land |
+| --- | --- | --- |
+| Character picker | Turn the ring or swipe left/right to browse. Tap the portrait to open the displayed character. | That character’s sheet |
+| Open sheet | Swipe **up** for Health or **down** for the character picker. Start inside the screen, away from the rim, and keep contact until the end of the stroke. | Hit points or character selection |
+| Open sheet | Swipe left for the next pair or right for the previous pair. Turning the ring or tapping the small left/right chevrons also pages. Tap a side shortcut to open it. | Checks/Saves → Spells/Actions → Magic/Rest → Health/Effects → Pack/Turn |
+| Open sheet | Tap the portrait, then lift. | Mixed dice tray |
+| Top status arc | Tap the Wi-Fi name or power indicator on the picker or sheet. Tap **Language** or **Firmware** for its controls. | Device status |
+| Bottom arc | Tap **Phone setup** on the picker or **Refresh sheet** on an open sheet. | Setup QR or an online check for this character |
+| Detail screen | Swipe right or tap the curved return caption. During a roll animation, wait for the result first. | The parent screen. On the character sheet, a right swipe pages the shortcuts instead. |
+
+| Open Health | Make a mixed roll |
+| --- | --- |
+| ![Health screen with current and maximum HP, Damage and Heal](screens/guide/health-awake.png) | ![Round dice tray with die types at the rim and the pool in the center](screens/guide/pool.png) |
+| Swipe up **from the sheet** to get here. Tap **Damage** or **Heal**, turn to set the amount, then confirm. This illustration is a firmware render. | Tap a rim die to add it. Hold the same die to remove one every half-second. Lift or slide off to stop. Spin the ring or tap the center to throw the pool. |
+
+### During play
+
+- **Checks and saves.** In Checks, swipe up/down or turn to browse skill groups and plain ability checks. Tap the named skill, ability or save. On a ready d20, swipe **up** for advantage, **down** for disadvantage, or tap the desired mode. Spin in either direction or tap the center to roll. Tap the result total to ready another roll. On an eligible result, tap the effect prompt and confirm the die to use. [Checks and saves](#roll-a-check-or-a-save)
+- **Dice tray.** Tap **− Remove** to subtract with each tap and **+ Add** to resume adding. Spin speed changes the animation. On the result, swipe vertically to see more individual faces or tap the total to edit your pool. [Dice tray walkthrough](#build-a-dice-pool)
+- **Spells and actions.** Swipe vertically or turn to browse entries and detail text. Tap the spell or weapon. On a cast preview, turn, swipe vertically or tap the pool chevrons to choose an eligible slot. Tap a Metamagic option to preview it and tap it again to clear it. **Cast** commits the displayed cost. On the resolution screen turn or tap the sides of the beam or dart count to choose a shot, then tap the roll you need. Spin on the ready roll. [Casting](#cast-a-spell) · [Weapon attacks](#use-your-equipment)
+- **Health, death saves and effects.** Tap the HP counter to edit your maximum. In **Damage** or **Heal**, turn or tap the sides of the amount, then confirm. At 0 HP, open **Death save**, spin or tap to roll, then review and apply. Tap **Stabilize** when your table stabilizes you. In **Effects**, turn or swipe vertically to browse effects and their choices. [Health and stabilization](#hit-points-death-saves-and-stabilization) · [Received effects](#received-roll-effects)
+- **Magic, rests and defenses.** Tap a conversion or rest to preview it. Where a selector is shown, turn, swipe vertically or tap its sides to change the choice. Confirm the spend or tap **Finish rest**. In **Actions → Defenses**, tap AC for equipment or temporary HP for its adjustment. Turn to set damage or elapsed time, then confirm. [Sorcery Points](#sorcery-points-and-metamagic) · [Rests](#short-and-long-rests) · [Defenses](#track-a-defensive-spell)
+- **Pack and Turn.** Swipe vertically or turn to browse pack pages, select a recipient or adjust quantities. Tap the item or coin, check the preview, then confirm. **Undo** on the receipt reverses the recorded transaction. In **Turn**, tap a row to mark or correct an action, bonus action or reaction. Tap **Next turn** and confirm when your next turn begins. [Pack](#use-your-pack-and-purse) · [Turn](#track-your-turn)
+
+### Setup, sheet review and firmware
+
+On the dial, tap the setup QR to switch between the join-network code and the open-page code. Tap the bottom **Done** arc to exit. On the phone, choose the table network and tap **Connect dial**, or choose **Connect saved**. For artwork, drag the picture with one finger, adjust the Zoom slider and tap **Use crop**. [Phone setup](#set-up-at-the-table) · [Artwork](#profile-icon-and-alternate-background)
+
+When a character has changed, tap **Apply update** to accept or **Keep current** to dismiss. For a firmware offer, tap **Install update** to proceed or swipe right to leave the preview. To return to a previous installation, tap **Previous firmware**, review the version and confirm with **Restore now**. [Character refresh](#refresh-and-play-offline) · [Firmware updates](#update-the-dial-over-wi-fi)
 
 ## Use your Pack and Purse
 
