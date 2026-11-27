@@ -2,6 +2,7 @@
 body { margin: 0; padding: 4vh 1.3rem; }
 main { max-width: 32rem; margin: auto; }
 header { display: flex; align-items: center; gap: 1.1rem; color: #d2ba84; }
+header a { color: inherit; text-underline-offset: .15em; }
 header img { border-radius: 50%; border: 1px solid #9d9065; }
 h1, h2 { font-family: Georgia, serif; font-weight: 500; line-height: 1.15; }
 h1 { font-size: clamp(2.6rem, 8vw, 3.8rem); margin: 1.3rem 0 .7rem; }
