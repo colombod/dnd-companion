@@ -56,20 +56,41 @@ int main(){
     legacy.begin("dnd-network1");
     legacy.putBytes("ssid","Table",5);legacy.putBytes("pass","test-only",9);
     networksBegin();
-    assert(!legacy.isKey("pass") && WiFi.attempted=="Table" && WiFi.supplied=="test-only");
-    WiFi.online=true;WiFi.associated="Table";networksPoll();
+    auto poll=[](unsigned ms,bool setup=true){fakeMillis+=ms;networksPoll(setup);};
+    auto joined=[&](const char *ssid){WiFi.online=true;WiFi.associated=ssid;poll(1);};
+    poll(0,false);
+    assert(!legacy.isKey("pass") && WiFi.attempted.empty());
+    poll(400);
+    assert(WiFi.attempted=="Table" && WiFi.supplied=="test-only");
+    joined("Table");
     assert(!connectNetwork("Table","bad",false));
-    fakeMillis+=25000;networksPoll();
-    assert(!connectNetwork("Table","",true) && WiFi.supplied=="test-only"); // failed edit preserved
-    WiFi.online=true;WiFi.associated="Table";networksPoll();
-    assert(!connectNetwork("Tavern","second-test",false));
-    WiFi.online=true;WiFi.associated="Tavern";networksPoll();
-    scanNetworks();WiFi.scan=3;networksPoll();
+    poll(400);poll(21000);
+    assert(!connectNetwork("Table","",true));
+    poll(400);
+    assert(WiFi.supplied=="test-only"); // A failed join never replaces a working password.
+    joined("Table");
+    assert(!saveNetwork("Tavern","second-test",false) && WiFi.online && WiFi.SSID()=="Table");
+    assert(!connectNetwork("Tavern","",true));
+    scanNetworks();poll(400);
+    assert(WiFi.attempted=="Tavern" && WiFi.scan!=WIFI_SCAN_RUNNING);
+    joined("Tavern");assert(WiFi.scan==WIFI_SCAN_RUNNING);
+    WiFi.scan=3;poll(1);
     JsonDocument doc;networkStatus(doc);
     assert(doc["saved"].size()==2 && doc["nearby"].size()==2);
     std::string response;serializeJson(doc,response);
     assert(response.find("second-test")==std::string::npos && response.find("test-only")==std::string::npos);
-    assert(!forgetNetwork("Tavern") && !WiFi.online && connectNetwork("Tavern","",true));
-    assert(!connectNetwork("Table","",true) && WiFi.supplied=="test-only");
+    // Automatic recovery rotates beyond an unavailable preferred network.
+    WiFi.disconnect(false,false);poll(16000,false);poll(400,false);
+    assert(WiFi.attempted=="Tavern");
+    poll(21000,false);poll(16000,false);poll(400,false);
+    assert(WiFi.attempted=="Table");joined("Table");
+    Preferences::failKey="networks2";
+    assert(forgetNetwork("Table") && WiFi.online);
+    Preferences::failKey.clear();
+    assert(!forgetNetwork("Table") && WiFi.online); // Return the acknowledgement before disconnecting.
+    poll(450);assert(!WiFi.online && connectNetwork("Table","",true));
+    assert(!forgetNetwork("Table")); // Safe to retry a lost acknowledgement.
+    assert(!connectNetwork("Tavern","",true));
+    poll(400);assert(WiFi.supplied=="second-test");
     std::cout<<"Catalog migration, edits, deletion, failed writes, source diff, saved Wi-Fi, scan, forget and credential redaction passed.\n";
 }

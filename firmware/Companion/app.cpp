@@ -25,6 +25,7 @@ using dial::Rim;
 
 enum class Page { Boot, Picker, Sheet, Setup, Review, Device, Play, Book, Resources, Language, Firmware, Health, Pack };
 static int sheetPair;
+static constexpr dial::Capsule sheetDice{180,217,76,44};
 static void shiftPair(int by){sheetPair=((sheetPair+by)%5+5)%5;}
 static Library library;
 static Page page = Page::Boot;
@@ -150,7 +151,10 @@ static void setupQR() {
     returnArc(ui::tr("Done  •  Library"));
 }
 static String syncLabel(const Sheet &s) {
-    if (fetching && fetching == s.id) return ui::tr("Refreshing from Beyond...");
+    if (fetching && fetching == s.id) {
+        uint32_t kib=refreshKiB();
+        return kib ? String(kib)+" KiB" : String(ui::tr("Refreshing from Beyond..."));
+    }
     if (notice.length() && noticeId == s.id) return ui::tr(notice.c_str());
     if (!s.id) return ui::tr("Local character");
     if (!s.synced) return ui::tr("Saved on dial");
@@ -339,11 +343,10 @@ static void render() {
         arcText(String(LV_SYMBOL_SETTINGS "  ")+ui::tr("Phone setup"),ArcLabel::Action,teal);
     } else {
         play::sheetLandmark(false,sheetPair);play::sheetLandmark(true,sheetPair);
-        auto *hint=textAt((String(LV_SYMBOL_LEFT "  ")+ui::tr("Dice")+"  ")+String(sheetPair+1)+"/5  " LV_SYMBOL_RIGHT,207,104,&lv_font_montserrat_14,paper);
-        lv_obj_set_style_bg_color(hint,lv_color_hex(ink),0);lv_obj_set_style_bg_opa(hint,LV_OPA_80,0);lv_obj_set_style_radius(hint,12,0);
+        sheetDice.draw(ui::tr("Dice"),paper,ink);
         arcText(fetching==s.id?ui::tr("Refreshing..."):String(LV_SYMBOL_REFRESH "  ")+ui::tr("Refresh sheet"),ArcLabel::Action,paper);
         const auto hp=session::health(s.id);
-        if(hp.maximum && (!hp.current || sheetPair==3)){
+        if(fetching!=s.id && hp.maximum && (!hp.current || sheetPair==3)){
             String health=String(hp.current)+" / "+hp.maximum+" HP";
             if(!hp.current){
                 const char *condition=hp.status==vitals::Status::Dying?"Dying":hp.status==vitals::Status::Stable?"Stable":"Dead";
@@ -590,7 +593,7 @@ static void gesture(int x, int y, int dx, int dy) {
         else if (dx > 0) pick();
         return;
     }
-    if(page==Page::Sheet && dy<=-42 && -dy>=abs(dx)){healthui::open(library.records[library.active],false);page=Page::Health;redraw=true;return;}
+    if(page==Page::Sheet && dy<=-28 && -dy>=abs(dx)){healthui::open(library.records[library.active],false);page=Page::Health;redraw=true;return;}
     if(page==Page::Sheet && dy>=42 && dy>=abs(dx)){pick();return;}
     if (abs(dx) > 18 || abs(dy) > 18) return;
     if(page==Page::Language){
@@ -626,9 +629,7 @@ static void gesture(int x, int y, int dx, int dy) {
         else {play::open(sheet.id,right);page=Page::Play;}
         redraw=true;
         if((sheetPair?!casting::playable(sheet.bookVersion):!sheet.rolls.version) && !fetching && WiFi.isConnected())syncCurrent();
-    } else if(page==Page::Sheet && y>=195 && y<=239 && ((x>=115 && x<158) || (x>202 && x<=245))){
-        shiftPair(x<180?-1:1);redraw=true;
-    } else if (page==Page::Sheet && dial::inHub(x,y)){
+    } else if (page==Page::Sheet && sheetDice.contains(x,y)){
         play::openTray(library.records[library.active].id);page=Page::Play;redraw=true;
     }
 }
@@ -649,6 +650,8 @@ static void pollInput() {
     turnWheel(wheelMovement());
     static int startX, startY, endX, endY;
     static bool down;
+    static bool sheetContact;
+    static int furthestX,furthestY;
     static play::DieHold hold;
     static bool leftDie;
     static uint32_t lastSeen;
@@ -661,14 +664,23 @@ static void pollInput() {
         int die=page==Page::Play?play::trayDieAt(x,y):-1;
         if (!down) {
             startX=x;startY=y;down=true;leftDie=false;
+            sheetContact=page==Page::Sheet;furthestX=furthestY=0;
             hold.begin(die,now);
         }
         endX=x;endY=y;lastSeen=now;
+        if(sheetContact){
+            int dx=endX-startX,dy=endY-startY;
+            if(dx*dx+dy*dy>furthestX*furthestX+furthestY*furthestY){furthestX=dx;furthestY=dy;}
+        }
         if(hold.die>=0 && die!=hold.die)leftDie=true;
         if(hold.due(die,now) && play::removeDie(die))redraw=true;
-    } else if (down && now-lastSeen > 45) {
+    } else if (down && now-lastSeen > (sheetContact ? 75u : 45u)) {
         down = false;
         Serial.printf("TOUCH %d,%d -> %d,%d\n", startX, startY, endX, endY);
+        if(sheetContact){
+            if(page==Page::Sheet)gesture(startX,startY,furthestX,furthestY);
+            return;
+        }
         if(!hold.consumed && (!leftDie || abs(endX-startX)>=42 || abs(endY-startY)>=42))
             gesture(startX,startY,endX-startX,endY-startY);
     }
@@ -804,6 +816,7 @@ void appLoop() {
         redraw = true;
         Serial.printf("PAIR phoneJoined=%d\n", phoneJoined);
     }
+    if (fetching && sampleDue && page==Page::Sheet && library.records[library.active].id==fetching) redraw=true;
     bool online=WiFi.isConnected();
     if (online!=wasOnline || (online && sampleDue)) {
         String name=online?displayNetworkName(WiFi.SSID()):String();
