@@ -32,13 +32,7 @@ The firmware image is `.build/bin/Companion.ino.bin`. The four round illustratio
 
 The first build downloads and verifies the pinned drivers and libraries. It uses LVGL 8.4.0, SensorLib 0.3.1, ArduinoJson 7.4.2 and the Arduino CLI included in the IDE. A new device starts with an empty library. Add accessible character links, profile icons and personal backgrounds through **Phone setup**. To preload your own character summaries, optionally run `.build/venv/bin/python tools/seed_picker.py 'https://www.dndbeyond.com/characters/YOUR_ID'` before building. Private seeds and recovery images live in the ignored `.local/` directory.
 
-For the first upload, use the Espressif esptool shipped with the installed core. Save the original flash under a new private filename and verify it before writing. Substitute the confirmed S3 port and the absolute esptool path on your Mac.
-
-```sh
-python3 tools/backup_dial.py --esptool "$ESPTOOL" --port "$DIAL_PORT" .local/recovery/original.bin
-(cd .build/objects && "$ESPTOOL" --chip esp32s3 --port "$DIAL_PORT" write-flash @flash_args)
-python3 tools/dial_console.py --port "$DIAL_PORT" STATUS LIST
-```
+For a factory dial, follow the [first USB installation on macOS](INSTALL.md#first-installation-on-macos). It verifies a full backup, prepares the released app with the matching boot files and checks the bootloader’s health confirmation. The stock selector in the Arduino build directory leaves the running slot unconfirmed on this board.
 
 ## Play
 
