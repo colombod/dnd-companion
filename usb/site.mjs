@@ -1,6 +1,6 @@
 import { readCompanion, readProcessor, withProcessor } from "./probe.mjs";
 import { ESPLoader, Transport } from "./esptool.js";
-import { eligible, verifyImage, install, release, healthyTarget } from "./update.mjs";
+import { updateRoute, verifyImage, install, healthyTarget } from "./update.mjs";
 
 const connect = document.querySelector("#connect");
 const hardware = document.querySelector("#hardware");
@@ -16,11 +16,13 @@ const filter = { usbVendorId: 0x303a, usbProductId: 0x1001 };
 let port;
 let paired;
 let image;
+let route;
 
 function clearUpdate() {
   update.hidden = true;
   confirm.hidden = true;
   image = null;
+  route = null;
   fileInput.value = "";
   preview.textContent = "";
 }
@@ -80,7 +82,13 @@ connect.addEventListener("click", async () => {
       const build = app.buildId ? ` · Build ID ${app.buildId}` : "";
       show("Cable orientation confirmed", `Keep the plug this way. Companion ${app.version} (${app.channel}, ${app.slot})${build}.`, "confirmed");
       hardware.hidden = false;
-      update.hidden = !eligible(app);
+      route = updateRoute(app);
+      update.hidden = !route;
+      if (route) {
+        const version = route.target.version;
+        document.querySelector('label[for="image"]').textContent = `Choose the ${version} app-only firmware (.bin)`;
+        confirm.textContent = `Install ${version}`;
+      }
     } else {
       show("Check the processor", "The port opened without a Companion reply. For a factory dial, keep the plug this way for now and choose Restart and check processor.");
       hardware.hidden = false;
@@ -125,14 +133,15 @@ fileInput.addEventListener("change", async () => {
   image = null;
   confirm.hidden = true;
   preview.textContent = "";
-  if (!file) return;
+  if (!file || !route) return;
+  const target = route.target;
   try {
-    if (file.size !== release.size) throw Error("Choose the 0.1.4 app-only firmware file.");
+    if (file.size !== target.size) throw Error(`Choose the ${target.version} app-only firmware file.`);
     const bytes = new Uint8Array(await file.arrayBuffer());
-    await verifyImage(bytes);
-    if (fileInput.files[0] !== file) return;
+    await verifyImage(bytes, target);
+    if (fileInput.files[0] !== file || route?.target !== target) return;
     image = bytes;
-    preview.textContent = `Ready to install 0.1.4 · Build ID ${release.buildId}. Keep the cable connected through the restart.`;
+    preview.textContent = `Ready to install ${target.version} · Build ID ${target.buildId}. Keep the cable connected through the restart.`;
     confirm.hidden = false;
   } catch (error) {
     if (fileInput.files[0] === file) preview.textContent = error.message;
@@ -143,6 +152,7 @@ confirm.addEventListener("click", async () => {
   if (!image || !port || connect.disabled) return;
   const selected = port;
   const bytes = image;
+  const selectedRoute = route;
   port = null;
   clearUpdate();
   hardware.hidden = true;
@@ -151,14 +161,14 @@ confirm.addEventListener("click", async () => {
   try {
     progress("Checking the installed build and flash layout…");
     const source = await readCompanion(selected);
-    if (!eligible(source)) throw Error("Recheck the dial’s running firmware before installing.");
+    if (!selectedRoute || updateRoute(source) !== selectedRoute) throw Error("Recheck the dial’s running firmware before installing.");
     const slot = await withProcessor(selected, { ESPLoader, Transport }, loader => install(loader, source, bytes, progress));
     progress("Restarting and waiting for the dial to confirm its build…");
     const deadline = Date.now() + 45000;
     while (Date.now() < deadline) {
       await new Promise(resolve => setTimeout(resolve, 1200));
       const app = await readCompanion(selected, 1200).catch(() => null);
-      if (healthyTarget(app, slot)) {
+      if (healthyTarget(app, slot, selectedRoute.target)) {
         show("USB update verified", `Companion ${app.version} (${app.channel}, ${app.slot}) · Build ID ${app.buildId}. On the dial, tap the top status arc and open Firmware to compare.`, "confirmed");
         return;
       }

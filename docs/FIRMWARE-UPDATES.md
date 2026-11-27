@@ -135,7 +135,7 @@ On the picker or character sheet, tap the top Wi-Fi and power arc. Open **Firmwa
 
 ![Firmware screen showing the installed version at the top and Check now at the bottom](screens/guide/updater.png)
 
-Read **Installed** at the top. The **v0.0.0** in this device capture was an updater test build. Your dial shows its own version here. Compare it with the [rulebook coverage for 0.1.5](RULES.md#rulebooks-and-expansions-in-firmware-015).
+Read **Installed** at the top. The **v0.0.0** in this device capture was an updater test build. Your dial shows its own version here. Compare it with the [rulebook coverage for 0.1.5](RULES.md#rulebooks-and-expansions).
 
 On builds with **Build ID**, record it alongside the installed version before and after an update or restore. The USB connection checker reports the same ID. To match it to a build artifact, run `esptool --chip esp32s3 image-info application.bin` on the computer and compare the first nine hexadecimal characters of **ELF file SHA256**. The release manifest separately verifies the complete downloadable image. [Find the build information on the dial](MANUAL.md#update-the-dial-over-wi-fi)
 
@@ -163,6 +163,10 @@ An existing dial needs one USB installation of an OTA-capable build. The standar
 
 Personal settings, character summaries, portraits and play state live in separate NVS and FAT partitions. Wi-Fi packages contain only the application image and release metadata. Both versions must be able to reopen the saved state after a forward update and a restore. The rollback-enabled bootloader can return to the previous image on reset if the new app fails before acknowledging its first working screen. In 0.1.3 a later gameplay bug requires USB recovery or a corrective release. For a manual USB repair, retain the verified backup and determine the running slot from the console's `STATUS` command before writing an application. [First USB installation](PICKER.md) · [Espressif OTA lifecycle](https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/api-reference/system/ota.html)
 
+## USB-only feed migration
+
+0.1.6 uses the main source repository for its application and update manifest. Its empty `otaFrom` list requires USB installation. The old firmware repository keeps the downloads used by existing installations and can publish a compatibility manifest directing older firmware to USB. Compatible releases on the new feed list their supported starting versions explicitly. [Player installation guide](INSTALL.md)
+
 ## Prepare a release
 
 Use the pinned tools from the macOS build guide. Set `firmware/VERSION` to a new three-part numeric version. Build the assets from a checkout of the source revision being released. The release option suppresses local character seeds, uses the production certificate bundle and checks the resulting app against the slot budget and product identity.
@@ -177,12 +181,12 @@ To offer a reversible update, add `--ota-from X.Y.Z` for each starting version t
 
 ## Prepare the distribution feed
 
-The default distribution address is the GitHub Releases feed of `colombod/dnd-companion-firmware`. A public, firmware-only repository allows a dial to read it without a GitHub account. The source repository can stay private. The distribution repository serves the manifest and binary to signed-out devices. Publish the two generated files together, using a draft while uploading. Run these commands from the source checkout with release access to the distribution repository.
+The default feed for firmware 0.1.6 and later is `https://github.com/colombod/dnd-companion/releases/latest/download/companion.json`. Publish the manifest and app as assets on the same source release. The legacy repository retains older downloads and USB migration notices. Devices use signed-out HTTPS for release discovery and installation.
 
 ```sh
 version=$(cat firmware/VERSION)
 dist=".build/releases/$version"
-repo=colombod/dnd-companion-firmware
+repo=colombod/dnd-companion
 gh release create "v$version" "$dist/companion.json" "$dist/waveshare-esp32-s3-knob-touch-lcd-1.8.bin" \
   --repo "$repo" --draft --title "Dial firmware $version" --notes-file release-notes.md
 ```

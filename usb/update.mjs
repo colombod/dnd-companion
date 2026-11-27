@@ -1,26 +1,45 @@
 // This pair has a verified rollback-capable bootloader and an unchanged save format.
 export const release = Object.freeze({
   version: "0.1.4", buildId: "ccc889911", size: 2369344,
+  md5: "68ea1c2ffbc990a0e212518fe7437191",
   sha256: "08bbb9b88ae7c3328d212b3bdc16a4c6153defb945cc97b3387f9a857bc44dcc",
 });
+const release015 = Object.freeze({
+  version: "0.1.5", buildId: "95a184a82", size: 2369344, md5: "be681b5b3a2673cabbafe17f15a9be6d",
+  sha256: "7c7d387c30f4f97753b836a22d9ca3e30af01b1a9d7bc7c49ffd2cc1cf182879",
+});
+const release016 = Object.freeze({
+  version: "0.1.6", buildId: "dcf978eee", size: 2369344, md5: "a2b57f2910732441df6ad402b43018a2",
+  sha256: "d32437730e92bad4e3a776b7d2268885277e1d00bd7654b1ac178e3e42bd4059",
+});
+const routes = [
+  { source: { version: "0.1.3", buildId: "1a8dc714d", size: 2365792, md5: "9ec6d6553f775838fcc5a9e3be1a92e3" }, channel: "dev", target: release },
+  { source: release, channel: "release", target: release015 },
+  { source: release015, channel: "release", target: release016 },
+];
 const appAddress = [0x10000, 0x310000];
 const selectorAddress = [0xe000, 0xf000];
 const sector = 4096;
 
 export function eligible(app) {
-  return app?.version === "0.1.3" && app.channel === "dev" && app.buildId === "1a8dc714d" &&
-    app.validity === 2 && app.stage === 0 && appAddress[slotIndex(app.slot)] !== undefined;
+  return !!updateRoute(app);
+}
+
+export function updateRoute(app) {
+  if (app?.validity !== 2 || app.stage !== 0 || slotIndex(app.slot) < 0) return null;
+  return routes.find(({source, channel}) => app.version === source.version &&
+    app.buildId === source.buildId && app.channel === channel) || null;
 }
 
 function slotIndex(label) {
   return ["app0", "app1"].indexOf(label);
 }
 
-export async function verifyImage(image) {
-  if (image.length !== release.size) throw Error("Choose the 0.1.4 app-only firmware file.");
+export async function verifyImage(image, target = release) {
+  if (image.length !== target.size) throw Error(`Choose the ${target.version} app-only firmware file.`);
   const hash = new Uint8Array(await crypto.subtle.digest("SHA-256", image));
   const hex = Array.from(hash, byte => byte.toString(16).padStart(2, "0")).join("");
-  if (hex !== release.sha256) throw Error("The file checksum differs from the qualified 0.1.4 image.");
+  if (hex !== target.sha256) throw Error(`The file checksum differs from the approved ${target.version} image.`);
 }
 
 function words(...values) {
@@ -80,8 +99,9 @@ async function checkFlash(loader, address, size, expected, label) {
 }
 
 export async function install(loader, app, image, progress) {
-  if (!eligible(app)) throw Error("The installed build is outside this USB update path.");
-  await verifyImage(image);
+  const route = updateRoute(app);
+  if (!route) throw Error("The installed build is outside this USB update path.");
+  await verifyImage(image, route.target);
   if (loader.chip.CHIP_NAME !== "ESP32-S3" || loader.IS_STUB !== false) throw Error("Expected the ESP32-S3 ROM.");
   const security = await loader.getSecurityInfo();
   if (security.flashCryptCnt !== 0 || security.parsedFlags.SECURE_BOOT_EN !== false ||
@@ -92,7 +112,7 @@ export async function install(loader, app, image, progress) {
   await loader.checkCommand("set flash geometry", 0x0b, words(0, 16 * 1024 * 1024, 65536, sector, 256, 0xffff));
   await checkFlash(loader, 0, 0x8000, "15bf2a1f056b4eabbc98313956c90ffd", "bootloader");
   await checkFlash(loader, 0x8000, sector, "e26072f13a22f8f614b8e8b48bd41d7a", "partition map");
-  await checkFlash(loader, appAddress[slotIndex(app.slot)], 2365792, "9ec6d6553f775838fcc5a9e3be1a92e3", "running firmware");
+  await checkFlash(loader, appAddress[slotIndex(app.slot)], route.source.size, route.source.md5, "running firmware");
   progress("Reading both boot records…");
   const records = [];
   for (const address of selectorAddress) records.push(await readRecord(loader, address));
@@ -105,7 +125,7 @@ export async function install(loader, app, image, progress) {
   await loader.writeFlash({ ...options, compress: true, fileArray: [{ address: plan.address, data: image }],
     reportProgress: (_i, sent, total) => progress("Writing " + plan.slot + " · " + Math.floor(100 * sent / total) + "%") });
   progress("Verifying the firmware on the dial…");
-  await checkFlash(loader, plan.address, image.length, "68ea1c2ffbc990a0e212518fe7437191", "new firmware");
+  await checkFlash(loader, plan.address, image.length, route.target.md5, "new firmware");
   progress("Selecting the verified firmware for its first boot…");
   await loader.writeFlash({ ...options, compress: false, fileArray: [{ address: plan.selector, data: plan.record }] });
   const written = await readRecord(loader, plan.selector);
@@ -113,7 +133,7 @@ export async function install(loader, app, image, progress) {
   return plan.slot;
 }
 
-export function healthyTarget(app, slot) {
-  return app?.version === release.version && app.buildId === release.buildId && app.channel === "release" &&
+export function healthyTarget(app, slot, target = release) {
+  return app?.version === target.version && app.buildId === target.buildId && app.channel === "release" &&
     app.validity === 2 && app.slot === slot;
 }

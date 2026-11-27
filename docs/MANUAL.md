@@ -8,7 +8,7 @@
 | --- | --- | --- | --- | --- |
 | **Checks** · **Saves** | **Spells** · **Actions** | **Magic** · **Rest** | **Health** · **Effects** | **Pack** · **Turn** |
 
-Swipe **up** on the sheet to open Health from any pair. Jump to [Pack and Purse](#use-your-pack-and-purse), [Turn](#track-your-turn), [HP and death saves](#hit-points-death-saves-and-stabilization), [roll reminders](#received-roll-effects), [phone setup](#set-up-at-the-table), [the dice tray](#build-a-dice-pool), [casting](#cast-a-spell), or [the Forge Artificer](#playing-a-forge-artificer). To see what the engine handles for your character’s books, open [rulebooks and expansions in firmware 0.1.3](RULES.md#rulebooks-and-expansions-in-firmware-015).
+Swipe **up** on the sheet to open Health from any pair. Jump to [Pack and Purse](#use-your-pack-and-purse), [Turn](#track-your-turn), [HP and death saves](#hit-points-death-saves-and-stabilization), [roll reminders](#received-roll-effects), [phone setup](#set-up-at-the-table), [the dice tray](#build-a-dice-pool), [casting](#cast-a-spell), or [the Forge Artificer](#playing-a-forge-artificer). To see what the engine handles for your character’s books, open [rulebooks and expansions](RULES.md#rulebooks-and-expansions).
 
 The round images are firmware captures from the dial. The Forge examples and the Health and Effects examples were rendered on a Mac from firmware 0.1.1 and 0.1.2 respectively. Pack and Turn are native-size Mac renders of 0.1.3 using an example character. The phone images show the English setup page with example data. Your totals and available options follow your own sheet.
 
@@ -259,7 +259,7 @@ Tap the top status arc on the picker or character sheet, then **Firmware**. This
 
 ![Firmware showing the installed version and Build ID above the separate Check now control](screens/guide/build-info.png)
 
-This 360 × 360 example was rendered on a Mac from the development firmware. Opening this screen leaves the updater idle. To install over Wi-Fi, tap **Check now**, read the version and changes, then tap **Install update**. Swipe right to decline. The qualified public update from 0.1.4 installs 0.1.5.
+This 360 × 360 example was rendered on a Mac from the development firmware. Opening this screen leaves the updater idle. To install over Wi-Fi, tap **Check now**, read the version and changes, then tap **Install update**. Swipe right to decline. Firmware 0.1.6 checks the main repository for compatible updates. The [installation guide](INSTALL.md) walks through the USB migration from 0.1.5.
 
 A compatible Wi-Fi update keeps the previous firmware on the dial. Under **Firmware**, tap **Previous firmware**, check its version, then tap **Restore now**. Swipe right to cancel. The dial restarts into that firmware with the latest saved game and Wi-Fi settings.
 
