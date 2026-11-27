@@ -82,7 +82,7 @@ well as color for mechanical states such as low HP or a spent slot.
 
 The interactive review exercises the library, appearance, refresh, spell
 resolution, mixed dice and a saving throw. The other rows specify how the larger feature list
-fits around those screens. The detailed rules live in the [feature list](FEATURES.md).
+fits around those screens. See the [feature design notes](FEATURE-DESIGN.md) and the [features available on the dial](FEATURES.md).
 
 ## Touch, feedback and graphics
 

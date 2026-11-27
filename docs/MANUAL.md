@@ -1,6 +1,6 @@
 # Player manual
 
-[Install, update or restore your dial](INSTALL.md) · [Features in this release](FEATURES.md)
+[Install, update or restore your dial](INSTALL.md) · [What the dial can do](FEATURES.md)
 
 **Start at the character sheet.** Tap the portrait whenever you want a handful of dice. Swipe sideways or turn the ring to change the two shortcuts beside it. A right swipe on a detail screen takes you back one step.
 
@@ -10,11 +10,11 @@
 
 Swipe **up** on the sheet to open Health from any pair. Jump to [Pack and Purse](#use-your-pack-and-purse), [Turn](#track-your-turn), [HP and death saves](#hit-points-death-saves-and-stabilization), [roll reminders](#received-roll-effects), [phone setup](#set-up-at-the-table), [the dice tray](#build-a-dice-pool), [casting](#cast-a-spell), or [the Forge Artificer](#playing-a-forge-artificer). To see what the engine handles for your character’s books, open [rulebooks and expansions](RULES.md#rulebooks-and-expansions).
 
-The round images are firmware captures from the dial. The Forge examples and the Health and Effects examples were rendered on a Mac from firmware 0.1.1 and 0.1.2 respectively. Pack and Turn are native-size Mac renders of 0.1.3 using an example character. The phone images show the English setup page with example data. Your totals and available options follow your own sheet.
+The Forge, Health, Effects, Pack and Turn illustrations are Mac renders of the dial screens using example characters. Other play screens were captured on the dial. Phone illustrations show the English setup with example data. Your own sheet supplies the totals and available options.
 
 ## Use your Pack and Purse
 
-Swipe the sheet once to the **left or right** per pair, or turn the ring. From the first pair, one step backwards reaches **Pack / Turn**. Tap **Pack**. After upgrading, tap **Refresh** once with Wi-Fi so the dial can read the character’s carried potions, scrolls and purse. They then work offline.
+Swipe the sheet once to the **left or right** per pair, or turn the ring. From the first pair, one step backwards reaches **Pack / Turn**. Tap **Pack**. If your pack is missing items, refresh the sheet over Wi-Fi so the dial can read the character’s carried potions, scrolls and purse. They then work offline.
 
 | Choose what to use | Give a potion to an ally |
 | --- | --- |
@@ -245,7 +245,7 @@ On **Cast preview**, tap **Distant** to see the new range or **Twinned** to see 
 
 ### Short and long rests
 
-Open **Rest**, choose **Short rest** or **Long rest**, read the before-and-after counts, then tap **Finish rest**. A short rest restores Pact slots. An eligible 2024 Sorcerer can choose Sorcerous Restoration once per long rest, while a 2014 level 20 Sorcerer regains four spent points. A long rest restores regular and Pact slots and Sorcery Points, removes temporary created slots and readies Restoration. Firmware 0.1.1 also restores eligible Forge Artificer counters. A qualifying long rest refills ordinary HP once you have confirmed your maximum. Record Hit Dice expenditure on the sheet and apply short-rest healing in Health.
+Open **Rest**, choose **Short rest** or **Long rest**, read the before-and-after counts, then tap **Finish rest**. A short rest restores Pact slots. An eligible 2024 Sorcerer can choose Sorcerous Restoration once per long rest, while a 2014 level 20 Sorcerer regains four spent points. A long rest restores regular and Pact slots and Sorcery Points, removes temporary created slots and readies Restoration. For a Forge Artificer, the rest preview includes any Flash of Genius or Mapping Magic uses the rest will restore. A qualifying long rest refills ordinary HP once you have confirmed your maximum. Record Hit Dice expenditure on the sheet and apply short-rest healing in Health.
 
 ![Long rest preview showing spell slots going from four to three, Pact slots from zero to two and Sorcery Points staying at two](screens/guide/long-rest.png)
 
@@ -255,33 +255,19 @@ Each character keeps local spending in flash. Switching characters, rebooting an
 
 ## Update the dial over Wi-Fi
 
-Tap the top status arc on the picker or character sheet, then **Firmware**. This works offline. Match **Installed** to the version of this guide. When reporting a problem, also include the **Build ID** underneath. It distinguishes builds that share a version. Earlier firmware shows only **Installed**.
+On the picker or sheet, tap the **top status arc → Firmware**. **Installed** and **Build ID** identify the software on your dial. Tap **Check now** on Wi-Fi to see an offer. Read the changes, then tap **Install update** or swipe right to decline. Keep the dial powered through its restart.
 
-![Firmware showing the installed version and Build ID above the separate Check now control](screens/guide/build-info.png)
+After a compatible Wi-Fi update, **Previous firmware** shows the version you can return to. Tap **Restore now** to confirm. Your current characters, play state and saved networks stay on the dial.
 
-This 360 × 360 example was rendered on a Mac from the development firmware. Opening this screen leaves the updater idle. To install over Wi-Fi, tap **Check now**, read the version and changes, then tap **Install update**. Swipe right to decline. Firmware 0.1.6 can install 0.1.7 over Wi-Fi from the main repository. The [installation guide](INSTALL.md) walks through the USB migration from 0.1.5.
-
-A compatible Wi-Fi update keeps the previous firmware on the dial. Under **Firmware**, tap **Previous firmware**, check its version, then tap **Restore now**. Swipe right to cancel. The dial restarts into that firmware with the latest saved game and Wi-Fi settings.
-
-| Find the saved firmware | Confirm the version |
+| Review the Wi-Fi offer | Review the restore target |
 | --- | --- |
-| ![Firmware 0.1.5 showing Previous firmware above Check now](screens/guide/firmware-v015.png) | ![Restore preview naming v0.1.4 and offering Restore now](screens/guide/restore-v014.png) |
+| ![Physical dial showing the offered firmware and Install update](screens/guide/offer-v017.png) | ![Physical dial showing the previous firmware version and Restore now](screens/guide/restore-v016.png) |
 
-These are captures from a physical dial during the public 0.1.4 → 0.1.5 → 0.1.4 test.
-
-On a computer, open **Check USB** in the player guide. Choose **Check my dial**. If the browser asks, select **USB JTAG/serial debug unit** and click **Connect**. If the list is empty, unplug at the dial, turn the plug over 180°, reconnect, and retry. **Cable orientation confirmed** means the plug is the right way round. Compare the two build IDs if your firmware reports one.
-
-![Browser checker showing which end of the USB cable to turn over when the main port is missing](screens/guide/usb-check.png)
-
-If the checker recognizes development build `1a8dc714d`, it offers **One-time USB update**. Choose the [0.1.4 bridge image](https://github.com/colombod/dnd-companion-firmware/releases/download/v0.1.5/usb-bridge-0.1.4.bin). Check that the preview shows `ccc889911`, then choose **Install 0.1.4**. Leave the cable connected until you see **USB update verified**. Open **Firmware** on the dial and compare the build ID.
-
-![USB update preview showing the target build ID and the separate Install 0.1.4 confirmation](screens/guide/usb-update.png)
-
-The USB update keeps your saved characters, artwork and Wi-Fi. Afterward, **Check now** is how you opt into future Wi-Fi releases. A compatible Wi-Fi install creates the **Previous firmware** entry. Keep your private recovery copy for a later USB return to the pre-update build.
+For first installation or a **USB update required** message, find your starting version in the [installation guide](INSTALL.md). It identifies the correct file and shows how to check the cable orientation.
 
 ## Playing a Forge Artificer
 
-Refresh your character sheet after installing 0.1.1 to import the new feature information. For a failed check or save, tap **Failed? Use reaction** if you want to spend Flash of Genius. The dial keeps the die and adds your bonus. For someone else's failed roll, open **Actions → Flash of Genius**. Confirm that you can see the creature within range and have your Reaction available.
+Open **Refresh sheet** and accept the update if your dial is missing a feature you gained on D&D Beyond. Once your Forge Artificer has Flash of Genius, you can use it on your own roll or help another creature. For a failed check or save, tap **Failed? Use reaction** if you want to spend Flash of Genius. The dial keeps the die and adds your bonus. For someone else's failed roll, open **Actions → Flash of Genius**. Confirm that you can see the creature within range and have your Reaction available.
 
 A Cartographer can have two entries for *Faerie Fire*. Choose **Cartographer Spells** to spend a spell slot or **Mapping Magic** to spend a feature use. The cast preview shows the cost. **Rest** restores the appropriate uses and offers Undo. [Supported features and sheet-managed effects](RULES.md#published-supplements-and-class-versions)
 

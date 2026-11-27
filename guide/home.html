@@ -10,6 +10,17 @@
   </div>
 </section>
 
+<section class="references inset" id="release" aria-labelledby="release-title">
+  <div class="reference-version">
+    <h2 id="release-title">What’s new in $version</h2>
+    <p>$highlight</p>
+  </div>
+  <div class="reference-links">
+    <a href="$first/features.html#what-works-today">What works on the dial today</a>
+    <a href="$first/install.html">How to install this release</a>
+  </div>
+</section>
+
 <section class="table-guide inset" id="at-the-table" aria-labelledby="table-title">
   <div class="section-heading">
     <h2 id="table-title">At the table</h2>
@@ -31,15 +42,40 @@
   </div>
 </section>
 
-<section class="references inset" aria-labelledby="versions">
+<section class="references inset" id="rules" aria-labelledby="rules-title">
   <div class="reference-version">
-    <h2 id="versions">Firmware guides</h2>
-    <p>On the dial, tap the top status arc and open <strong>Firmware</strong>. Choose the guide that matches your installed version.</p>
-    <ul class="version-list">$links</ul>
+    <h2 id="rules-title">Will it play my character?</h2>
+    <p>Bring a D&amp;D Beyond fifth-edition sheet that opens by link while signed out. The dial uses the 2014 or 2024 version of each supported class feature and spell, including on mixed sheets.</p>
   </div>
   <div class="reference-links">
-    <a href="$first/features.html">Features in this release</a>
-    <a href="$first/rules.html">Supported rulebooks</a>
-    <a href="$first/index.html#hit-points-death-saves-and-stabilization">Hit points &amp; death saves</a>
+    <a href="$first/features.html">See what you can do with your character</a>
+    <a href="$first/rules.html">See what the dial handles and what your table decides</a>
+    <a href="https://github.com/colombod/dnd-companion/issues/new?template=player-feature.yml">Request a feature or rule on GitHub</a>
+  </div>
+</section>
+
+<section class="references inset" id="hardware" aria-labelledby="hardware-title">
+  <div class="reference-version">
+    <h2 id="hardware-title">Which dial do I need?</h2>
+    <p>This firmware is built and tested for the <strong>Waveshare ESP32-S3-Knob-Touch-LCD-1.8</strong> with its 1.8-inch round touchscreen and rotary ring. Other boards, including other ESP32-S3 models, need a hardware port before they can run it.</p>
+    <p>Have another device in mind? Share its model and how you would use it at the table.</p>
+  </div>
+  <div class="reference-links">
+    <a href="https://www.waveshare.com/wiki/ESP32-S3-Knob-Touch-LCD-1.8">Identify the board on the Waveshare wiki</a>
+    <a href="https://www.waveshare.com/product/esp32-related/boards-kits/esp32-s3/esp32-s3-knob-touch-lcd-1.8.htm">Buy from Waveshare</a>
+    <a href="https://thepihut.com/products/esp32-s3-1-8-knob-display-development-board">Buy from The Pi Hut</a>
+    <a href="https://github.com/colombod/dnd-companion/issues/new?template=hardware-port.yml">Suggest a device for a port</a>
+  </div>
+</section>
+
+<section class="references inset" aria-labelledby="versions">
+  <div class="reference-version">
+    <h2 id="versions">Find your firmware guide</h2>
+    <p>The dial shows its installed version under the top status arc → <strong>Firmware</strong>.</p>
+    $archive
+  </div>
+  <div class="reference-links">
+    <a href="$first/index.html">Open the player manual · $label</a>
+    <a href="$first/install.html">Find the installation path for your dial</a>
   </div>
 </section>
