@@ -231,3 +231,10 @@ a:hover { color: #e5fff7; }
   .reading table { display: table; }
   .reading h2, .reading h3, .reading figure { break-after: avoid; }
 }
+
+.archive-notice {
+  margin: 1.25rem 0 0;
+  padding: .7rem 1rem;
+  border-inline-start: 2px solid #cd9c52;
+  background: #1b2931;
+}

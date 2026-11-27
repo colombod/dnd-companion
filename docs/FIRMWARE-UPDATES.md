@@ -167,6 +167,14 @@ Personal settings, character summaries, portraits and play state live in separat
 
 0.1.6 uses the main source repository for its application and update manifest. Its empty `otaFrom` list requires USB installation. The old firmware repository keeps the downloads used by existing installations and can publish a compatibility manifest directing older firmware to USB. Compatible releases on the new feed list their supported starting versions explicitly. [Player installation guide](INSTALL.md)
 
+**Breaking releases use USB.** Publish the app and a format-2 manifest with an empty `otaFrom` list. Document the supported starting builds, the backup procedure and the preserving USB route. For a later compatible release, explicitly list the migrated version only after checking its save and restore behavior. Firmware 0.1.7 accepts 0.1.6. The legacy feed continues to offer the 0.1.6 USB migration notice.
+
+### Physical migration and restore qualification
+
+On 27 November 2026, a populated 16 MiB Waveshare ESP32-S3 dial started on release 0.1.5 in app0. The complete device was backed up and verified before installing the main repository’s published 0.1.6 binary over USB. The checker reported build `dcf978eee` healthy in app1. Wi-Fi reconnected on a subsequent restart. The firmware reached the new production feed.
+
+The new feed offered 0.1.7. The tester dismissed the first offer, then confirmed a new offer. The dial installed build `78c0e14f6` over Wi-Fi in app0. **Previous firmware** returned it to 0.1.6. Independent flash readback verified the application images, boot records, all 15 logical player records and the entire 10,354,688-byte character filesystem after USB migration, OTA installation and restore. Two sheets, health, inventory, turn state and Undo matched their original screen captures on both versions.
+
 ## Prepare a release
 
 Use the pinned tools from the macOS build guide. Set `firmware/VERSION` to a new three-part numeric version. Build the assets from a checkout of the source revision being released. The release option suppresses local character seeds, uses the production certificate bundle and checks the resulting app against the slot budget and product identity.
