@@ -1,6 +1,6 @@
 # Screen design previews
 
-These concept images explore future play flows, including featured moves, profile colors and PDF imports. For the gestures and controls available in firmware 0.1.3, follow the [illustrated player manual](MANUAL.md). For implemented mechanics, use the [coverage table](RULES.md#rulebooks-and-expansions-in-firmware-015).
+These concept images explore future play flows, including featured moves, profile colors and PDF imports. For the gestures and controls available in firmware 0.1.3, follow the [illustrated player manual](MANUAL.md). For implemented mechanics, use the [coverage table](RULES.md#rulebooks-and-expansions).
 
 A returning player lands on **their character**. A signature move occupies the top
 of the face. The portrait opens the profile, imported class resources and source

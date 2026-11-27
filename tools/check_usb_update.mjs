@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { bootPlan, eligible, healthyTarget, install, release, verifyImage } from "../usb/update.mjs";
+import { bootPlan, eligible, healthyTarget, install, release, updateRoute, verifyImage } from "../usb/update.mjs";
 
 const old = Uint8Array.from(Buffer.from("01000000ffffffffffffffffffffffffffffffffffffffffffffffff9a984347", "hex"));
 const valid = Uint8Array.from(Buffer.from("02000000ffffffffffffffffffffffffffffffffffffffff020000007437f655", "hex"));
@@ -71,5 +71,26 @@ test("qualified artifact stages only after source checks and switches only after
     if (fail) await assert.rejects(action);
     else assert.equal(await action, "app0");
     assert.deepEqual(writes, !fail ? [0x10000, 0xe000] : ["app write", "new firmware"].includes(fail) ? [0x10000] : []);
+  }
+});
+
+test("release builds advance one approved USB step and reject the other step's app", async () => {
+  for (const [version, buildId, expected] of [
+    ["0.1.4", "ccc889911", "0.1.5"],
+    ["0.1.5", "95a184a82", "0.1.6"],
+  ]) {
+    const app = {channel: "release", version, buildId, validity: 2, stage: 0, slot: "app0"};
+    const route = updateRoute(app);
+    assert.equal(route.target.version, expected);
+    assert.equal(updateRoute({...app, buildId: "unknown"}), null);
+    assert.equal(updateRoute({...app, validity: 1}), null);
+    assert.equal(updateRoute({...app, stage: 4}), null);
+    assert.ok(healthyTarget({...app, version: expected, buildId: route.target.buildId}, "app0", route.target));
+    const path = process.env[expected === "0.1.6" ? "COMPANION_USB_016" : "COMPANION_USB_015"];
+    if (path) {
+      const image = new Uint8Array(await readFile(path));
+      await verifyImage(image, route.target);
+      await assert.rejects(verifyImage(image, route.source), /checksum/);
+    }
   }
 });

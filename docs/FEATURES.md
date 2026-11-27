@@ -1,5 +1,5 @@
 <!-- player-guide:start -->
-# Features in Companion 0.1.5
+# Features in Companion 0.1.6
 
 The dial follows the active character. Turn the ring or swipe to another saved character, tap the portrait to play, and keep using the cached sheet between Wi-Fi connections.
 
@@ -17,12 +17,12 @@ The dial follows the active character. Turn the ring or swipe to another saved c
 
 ![Spellbook with the active character’s available slots and spells](screens/guide/spellbook.png)
 
-The rulebook guide describes supported 2014 and 2024 mechanics, supplements and decisions left to the table. [Rulebook coverage](RULES.md#rulebooks-and-expansions-in-firmware-015)
+The rulebook guide describes supported 2014 and 2024 mechanics, supplements and decisions left to the table. [Rulebook coverage](RULES.md#rulebooks-and-expansions)
 <!-- player-guide:end -->
 
 ## Design and implementation notes
 
-The sections below include proposed capabilities. The release table above lists the features available in 0.1.5. [Screen design previews](SCREEN-FLOWS.md)
+The sections below include proposed capabilities. The release table above lists the features available in 0.1.6. [Screen design previews](SCREEN-FLOWS.md)
 
 ## The active character comes first
 
@@ -309,7 +309,7 @@ player's turn.
 
 ## Proposed game profiles and rules design
 
-Firmware 0.1.2 reads supported 2014 and 2024 D&D rules from each character’s sheet. The table below describes **proposed capabilities**. Per-class Hit Dice recovery remains a design target for D&D. The additional game profiles are proposals. [Current coverage by book](RULES.md#rulebooks-and-expansions-in-firmware-015)
+Firmware 0.1.2 reads supported 2014 and 2024 D&D rules from each character’s sheet. The table below describes **proposed capabilities**. Per-class Hit Dice recovery remains a design target for D&D. The additional game profiles are proposals. [Current coverage by book](RULES.md#rulebooks-and-expansions)
 
 | Game profile | Expected behavior |
 | --- | --- |

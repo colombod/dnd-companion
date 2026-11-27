@@ -1,7 +1,7 @@
 <!-- player-guide:start -->
 # Which D&D rules does my dial use?
 
-## Rulebooks and expansions in firmware 0.1.5
+## Rulebooks and expansions
 
 Tap the **top status arc → Firmware** to see your installed version. The Forge Artificer counters first appear in **0.1.1**. After installing it, open the character and choose **Refresh sheet**, then accept the update to import its feature grants. The dial reads the versions of the class, spell and granting feature on each accepted D&D Beyond sheet. There is no edition switch to set for the whole library.
 

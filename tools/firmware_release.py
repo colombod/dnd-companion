@@ -8,7 +8,7 @@ from urllib.parse import urlparse
 
 TARGET = "waveshare-esp32-s3-knob-touch-lcd-1.8"
 ASSET = TARGET + ".bin"
-BASE = "https://github.com/colombod/dnd-companion-firmware/releases"
+BASE = "https://github.com/colombod/dnd-companion/releases"
 FEED = BASE + "/latest/download/companion.json"
 SLOT_SIZE = 3 * 1024 * 1024
 
