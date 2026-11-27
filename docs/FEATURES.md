@@ -1,9 +1,9 @@
 <!-- player-guide:start -->
 # What can I do with my character?
 
-## What’s new in 0.1.7
+## What’s new in 0.1.8
 
-You can install this release over Wi-Fi from 0.1.6 and use Previous firmware to return to 0.1.6. Both paths preserve your characters, their saved play state and your Wi-Fi settings. The gameplay rules are the same as in 0.1.6.
+Swipe up from your portrait for hit points, or tap Dice to roll. Phone setup lets you save a table network for later, reuse its password or forget it by name. Character refresh requests a smaller download from D&D Beyond and shows progress as it arrives.
 
 ## What works today
 

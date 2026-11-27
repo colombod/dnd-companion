@@ -301,7 +301,7 @@ After a compatible Wi-Fi update, **Previous firmware** shows the version you can
 
 | Review the Wi-Fi offer | Review the restore target |
 | --- | --- |
-| ![Physical dial showing the offered firmware and Install update](screens/guide/offer-v017.png) | ![Physical dial showing the previous firmware version and Restore now](screens/guide/restore-v016.png) |
+| ![The dial offering firmware 0.1.8 with Install update](screens/guide/offer-v018.png) | ![The dial previewing a return to firmware 0.1.7 with Restore now](screens/guide/restore-v017.png) |
 
 For first installation or a **USB update required** message, find your starting version in the [installation guide](INSTALL.md). It identifies the correct file and shows how to check the cable orientation.
 
