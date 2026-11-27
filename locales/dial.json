@@ -1,4 +1,6 @@
 {
+  "Incomplete compressed sheet": {"it": "Scheda compressa incompleta", "es": "Ficha comprimida incompleta"},
+  "Unsupported sheet encoding": {"it": "Formato della scheda non supportato", "es": "Formato de ficha no compatible"},
   "Sheet download interrupted": {"it": "Download della scheda interrotto", "es": "Descarga de la ficha interrumpida"},
   "Sheet download timed out": {"it": "Tempo di download scaduto", "es": "Se agotó el tiempo de descarga"},
   "Sheet exceeds download size": {"it": "Scheda oltre il limite di download", "es": "La ficha supera el límite de descarga"},

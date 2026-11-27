@@ -132,7 +132,7 @@ shows **Charging status unavailable** while plugged in.
 
 ## Refresh and play offline
 
-Tap **Refresh sheet** while connected. The dial checks an available HTTP version tag first and skips rapid repeat checks. Some D&D Beyond responses carry their revision inside the full sheet and require a download to compare. When a change is detected, review the old and new summaries and choose **Apply update** or **Keep current**, on the dial or phone. During a download the sheet shows the number of KiB received. An early interruption can retry once. If the check fails or you decline the update, the previously saved sheet stays available offline.
+Tap **Refresh sheet** while connected. The dial checks an available HTTP version tag first and skips rapid repeat checks. Some D&D Beyond responses carry their revision inside the full sheet and require a download to compare. When a change is detected, review the old and new summaries and choose **Apply update** or **Keep current**, on the dial or phone. The cache arc shows how many KiB have arrived. The dial requests a compressed copy when available, so this count can be smaller than the full character sheet. It retries an early network interruption once. If the check fails or you decline the update, the previously saved sheet stays available offline.
 
 ![Phone update review comparing Mira at Wizard 4 with Wizard 5, with Apply update and Keep current choices](screens/guide/phone-review.png)
 

@@ -5,8 +5,9 @@
 #include <WiFi.h>
 #include <ctime>
 #include <atomic>
+#include <algorithm>
 
-#include "body.h"
+#include "sheet_gzip.h"
 
 static QueueHandle_t results;
 static bool busy;
@@ -20,11 +21,19 @@ public:
     SheetBody(size_t capacity,uint32_t start) : Body(capacity), started(start) {}
     size_t write(const uint8_t *bytes,size_t count) override {
         if (millis()-started>=60000) {expired=true;setWriteError();return 0;}
+        if (count > MaxSheetBytes - length) {setWriteError();return 0;}
+        if (length + count > capacity) {
+            size_t next = std::max(length + count, std::min(capacity * 2, MaxSheetBytes));
+            auto *grown = static_cast<uint8_t *>(ps_realloc(data, next));
+            if (!grown) {outOfMemory=true;setWriteError();return 0;}
+            data = grown;
+            capacity = next;
+        }
         size_t n=Body::write(bytes,count);
         downloadedKiB.store(length/1024,std::memory_order_relaxed);
         return n;
     }
-    bool expired=false;
+    bool expired=false, outOfMemory=false;
 private:
     uint32_t started;
 };
@@ -42,9 +51,10 @@ static const char *fetch(uint32_t id, RefreshResult &result, uint32_t started, b
     String url = "https://character-service.dndbeyond.com/character/v5/character/" + String(id);
     if (!http.begin(tls, url)) return "Could not open character service";
     http.setUserAgent("DnD-Companion/0.1");
-    http.addHeader("Accept-Encoding", "identity");
-    const char *headers[] = {"ETag", "Last-Modified"};
-    http.collectHeaders(headers, 2);
+    http.setAcceptEncoding("gzip, identity");
+    http.setReuse(false);
+    const char *headers[] = {"ETag", "Last-Modified", "Content-Encoding"};
+    http.collectHeaders(headers, 3);
     if (requestTag.etag[0]) http.addHeader("If-None-Match", requestTag.etag);
     else if (requestTag.lastModified[0]) http.addHeader("If-Modified-Since", requestTag.lastModified);
     int status = http.GET();
@@ -60,12 +70,18 @@ static const char *fetch(uint32_t id, RefreshResult &result, uint32_t started, b
         snprintf(result.error, sizeof(result.error), status > 0 ? "Character service: HTTP %d" : "HTTPS connection failed (%d)", status);
         return result.error;
     }
-    constexpr int limit = 2 * 1024 * 1024;
     int size = http.getSize();
-    if (size > limit) return "Sheet exceeds 2 MiB";
-    SheetBody body(size > 0 ? size : limit,started);
+    if (size > static_cast<int>(MaxSheetBytes)) return "Sheet exceeds 2 MiB";
+    SheetBody body(size > 0 ? size : 16384,started);
     if (!body.data) return "Insufficient PSRAM";
+    String encoding = http.header("Content-Encoding");
+    if (encoding.length() && !encoding.equalsIgnoreCase("gzip") && !encoding.equalsIgnoreCase("identity"))
+        return "Unsupported sheet encoding";
     int n = http.writeToStream(&body);
+    Serial.printf("SHEET transfer %s bytes=%u result=%d elapsed=%lu ms\n",
+        encoding.equalsIgnoreCase("gzip") ? "gzip" : "identity", unsigned(body.length), n,
+        static_cast<unsigned long>(millis()-started));
+    if (body.outOfMemory) return "Insufficient PSRAM";
     if (body.expired) return "Sheet download timed out";
     if (body.getWriteError()) return "Sheet exceeds download size";
     if (n<=0 || (size>=0 && size!=n)) {
@@ -74,6 +90,10 @@ static const char *fetch(uint32_t id, RefreshResult &result, uint32_t started, b
     }
     String etag=http.header("ETag"), modified=http.header("Last-Modified");
     http.end();
+    if (encoding.equalsIgnoreCase("gzip")) {
+        const char *decodeError = expandSheetGzip(body);
+        if (decodeError) return decodeError;
+    }
     // A bounded reader prevents the parser reading beyond received bytes.
     class Reader {
     public:
