@@ -22,4 +22,10 @@ Preview pages use the working copy and visibly identify the development build. T
 
 The job enumerates published stable firmware releases in the source repository, reads each matching tag, and builds the manual and its referenced guide images from that tag. A mismatch with `firmware/VERSION`, a missing asset or an empty release list stops the build. Only the generated site directory is uploaded.
 
+### Publish a correction to installation instructions
+
+Include the corrected installation page, preparation script and images in a PR. Give each correction its own annotated tag, such as `guide-v0.1.5-usb.1`, and set the matching firmware entry in `INSTALL_REVISIONS` to its full `refs/tags/...` name. After merging, tag the reviewed revision and push the new tag before dispatching Pages. Keep published correction tags fixed. The installation page and its referenced assets are read from that tag. The rest of the guide comes from the firmware release tag.
+
+For 0.1.5 the distribution release supplies `first-usb-0.1.5.zip`. Pages verifies its SHA-256 and serves it beside the versioned installation page. To qualify a local build before uploading the ZIP, place the tested archive at `.build/first-usb-0.1.5.zip` and build with `--published`. After merging and uploading the release asset, run **Publish player guides** on `main`. From the live home page choose **Install or update**, download the ZIP, and compare all four flash images and `flash_args` against the hardware qualification kit. Follow **Reproduce the installer files** to verify the hosted preparation script independently.
+
 After the clean history rewrite and first release, protect `main` with an active branch rule requiring a pull request for every change, including administrator changes. Block force pushes and deletion. Subsequent releases use tags on merged commits.

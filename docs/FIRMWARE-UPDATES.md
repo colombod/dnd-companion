@@ -109,13 +109,25 @@ Tests used one populated Waveshare ESP32-S3-Knob-Touch-LCD-1.8, S3 silicon revis
 
 **One-time player-guide USB update.** On macOS 27.2.1 with Chrome 158.0.8127.89 and the populated dial above, the guide recognized `1a8dc714d` in app1. After explicit confirmation it installed `ccc889911` in app0. The dial marked the candidate valid. The Firmware screen, the browser readback and the release artifact agreed on the build ID. All 15 logical player settings and save records and the complete data partition matched the private pre-update backup. Both sheets reopened and the saved network reconnected. The old app and its valid boot record were independently verified in place. During a preliminary attempt Chrome exited; a separate ROM read found both slots, both boot records and the player records intact before retry.
 
-The original format-1 firmware needs a preserving USB update to use this path. Retail first-install, separate browser/OS combinations, loss of the Wi-Fi association during a manual restore, and other starting builds need their own qualification. Keep recovery images and per-character evidence on the tester’s computer.
+The original format-1 firmware needs a preserving USB update to use this path. Other browser/OS combinations, loss of the Wi-Fi association during a manual restore and other starting builds need their own qualification. Keep recovery images and per-character evidence on the tester’s computer.
 
 ### Public release qualification for 0.1.5
 
 On 27 November 2026 the dial on 0.1.4 (`ccc889911`, app0) retrieved the public GitHub offer. Dismissing the offer left the old firmware running. Confirming the offer installed 0.1.5 (`95a184a82`, app1). **Previous firmware → Restore now** returned the dial to `ccc889911`. Both cached sheets reopened on both builds. All 15 player records, the full user filesystem, inventory, health, turn state and Undo matched the verified pre-update checkpoint. The saved network reconnected after reboot. Independent flash reads confirmed both application images and the bootloader’s final valid and rejected slot states.
 
-The released 2,369,344-byte application has SHA-256 `7c7d387c30f4f97753b836a22d9ca3e30af01b1a9d7bc7c49ffd2cc1cf182879`. The public offer accepts 0.1.4. Factory provisioning and upgrades from other versions have their own qualification requirements.
+The released 2,369,344-byte application has SHA-256 `7c7d387c30f4f97753b836a22d9ca3e30af01b1a9d7bc7c49ffd2cc1cf182879`. The public offer accepts 0.1.4. The first USB installation has a separate qualification below.
+
+### Factory USB qualification for 0.1.5
+
+On 27 November 2026, a Waveshare ESP32-S3-Knob-Touch-LCD-1.8 was backed up in full and loaded with Waveshare’s `WX-ESP32S3-KNOB_V1.2.bin` main-processor demo. The 16 MiB factory image was verified against flash. Chrome 158 on macOS 27.2.1 identified **ESP32-S3 · 16 MiB flash** using the published checker files served on localhost with an existing Web Serial grant. The public-site port chooser was outside this run.
+
+| First-install path | Physical result |
+| --- | --- |
+| Original tagged guide, locally built app and stock Arduino boot selector | The empty picker opened. The running slot reported `validity=-1`, which prevents Wi-Fi installation. |
+| Factory backup restored, then the prepared USB files from the [corrected guide](INSTALL.md#first-installation-on-macos) | The distributed app `95a184a82` booted in app0 with an empty library. Its own health check confirmed the slot (`validity=2`). The browser and the dial displayed the same build ID. |
+| Restore the test player’s data and reboot | All 15 logical player records and all 10,354,688 filesystem bytes matched the original backup. Both character sheets, health, inventory, turn state and Undo screens matched the original captures pixel for pixel. The saved Wi-Fi reconnected and the dial reported **Up to date** from the public release feed. |
+
+The preparation script marks the initial app as new. The bootloader requests verification on first boot, and the app confirms its own readable catalog. A first install has no previous Companion to select. [Espressif OTA lifecycle](https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/api-reference/system/ota.html)
 
 ## Check for a Wi-Fi update on the dial
 
