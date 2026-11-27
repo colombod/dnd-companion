@@ -1,5 +1,5 @@
 <!-- player-guide:start -->
-# Features in Companion 0.1.6
+# Features in Companion 0.1.7
 
 The dial follows the active character. Turn the ring or swipe to another saved character, tap the portrait to play, and keep using the cached sheet between Wi-Fi connections.
 
@@ -22,7 +22,7 @@ The rulebook guide describes supported 2014 and 2024 mechanics, supplements and 
 
 ## Design and implementation notes
 
-The sections below include proposed capabilities. The release table above lists the features available in 0.1.6. [Screen design previews](SCREEN-FLOWS.md)
+The sections below include proposed capabilities. The release table above lists the features available in 0.1.7. [Screen design previews](SCREEN-FLOWS.md)
 
 ## The active character comes first
 
