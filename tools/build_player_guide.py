@@ -21,7 +21,10 @@ VERSION = re.compile(r"(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)")
 GUIDE = ROOT / "guide"
 ASSET = re.compile(r"!\[[^\]]*\]\((screens/guide/[a-z0-9-]+\.png)\)")
 # Reviewed installation errata for firmware whose release tag is already public.
-INSTALL_REVISIONS = {"v0.1.5": "refs/tags/guide-v0.1.5-usb.1"}
+INSTALL_REVISIONS = {
+    "v0.1.5": "refs/tags/guide-v0.1.5-usb.1",
+    "v0.1.7": "refs/tags/guide-v0.1.7-install.1",
+}
 USB_ZIP = "first-usb-0.1.5.zip"
 USB_URL = f"https://github.com/colombod/dnd-companion-firmware/releases/download/v0.1.5/{USB_ZIP}"
 USB_SHA256 = "b0f27986f2f9cfd678623dd0c13dd4fe6c5b45b985ed166b99aa1847f0dab9c2"
@@ -94,7 +97,7 @@ def page(target, prefix, title, body, nav):
     target.write_text(template.substitute(prefix=prefix, title=escape(title), body=body, nav=nav))
 
 
-def render_version(output, tag):
+def render_version(output, tag, latest_tag=None):
     release = f"refs/tags/{tag}" if tag else None
     version = content("firmware/VERSION", release).decode().strip()
     if not VERSION.fullmatch(version) or (tag and tag != "v" + version):
@@ -146,6 +149,10 @@ def render_version(output, tag):
         html = subprocess.check_output(["pandoc", "-f", "gfm", "-t", "html5", "--wrap=none",
                                         "--toc", "--toc-depth=3", "--template", str(GUIDE / "article.html")],
                                        input=text, text=True)
+        if tag and latest_tag and tag != latest_tag and filename == "install.html":
+            current_url = f"../{latest_tag}/install.html"
+            html = (f'<p class="archive-notice">Reading the {version} installation guide. '
+                    f'<a href="{current_url}">See current USB and Wi-Fi update paths</a>.</p>' + html)
         page(directory / filename, "../../", f"{title} · {label}", html,
              nav.replace(f'href="{filename}"', f'href="{filename}" aria-current="page"'))
     return path, label
@@ -164,7 +171,7 @@ def main():
         output = Path(temp) / "site"
         output.mkdir()
         build_usb_checker(output / "usb")
-        guides = [render_version(output, tag) for tag in tags]
+        guides = [render_version(output, tag, tags[0]) for tag in tags]
         first, label = guides[0]
         shutil.copyfile(GUIDE / "guide-hero.webp", output / "guide-hero.webp")
         shutil.copytree(GUIDE / "fonts", output / "fonts")

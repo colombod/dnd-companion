@@ -30,4 +30,8 @@
 3. To return to 0.1.6, choose **Previous firmware → Restore now**. After restarting, confirm build **dcf978eee**. You can install 0.1.7 again from **Check now**.
 
 
+| Install over Wi-Fi from 0.1.6 | Return to 0.1.6 from 0.1.7 |
+| --- | --- |
+| ![Physical dial on 0.1.6 showing the 0.1.7 offer and Install update](screens/guide/offer-v017.png) | ![Physical dial on 0.1.7 showing Restore now and the previous version 0.1.6](screens/guide/restore-v016.png) |
+
 The player chooses when to check and install. A release that requires USB shows **USB update required** when offered to an incompatible starting version. After a compatible Wi-Fi installation, **Previous firmware → Restore now** brings back the previous firmware with your current character saves. A USB migration has no player-initiated OTA restore receipt.
