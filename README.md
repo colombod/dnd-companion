@@ -10,14 +10,14 @@ Private sheets and automatic account-wide character discovery are unsupported.
 Save D&D Beyond character links, switch characters on the device, and refresh
 over Wi-Fi. Play offline in English, Italian or Spanish. PDF import is planned.
 
-## Play with firmware 0.1.6
+## Play with firmware 0.1.7
 
 Open a portrait to roll checks, saves and attacks with your own modifiers. Cast from your slots, track HP and death saves, or open **Pack** to drink a potion, use a scroll or pay in coins. **Turn** keeps your action, bonus action and reaction visible. Swipe the sheet to change shortcuts or tap the portrait for mixed dice.
 
 ![Eldritch Blast on the dial, with the character’s attack bonus, two beams and no slot cost](docs/screens/guide/eldritch-blast.png)
 
-- [Install or update your dial](https://colombod.github.io/dnd-companion/guide/v0.1.6/install.html) · [USB orientation checker](https://colombod.github.io/dnd-companion/usb/index.html)
-- [Illustrated player manual](https://colombod.github.io/dnd-companion/guide/v0.1.6/index.html) · [Release features](https://colombod.github.io/dnd-companion/guide/v0.1.6/features.html) · [Rulebook coverage](https://colombod.github.io/dnd-companion/guide/v0.1.6/rules.html)
-- [Firmware downloads](https://github.com/colombod/dnd-companion/releases/tag/v0.1.6) · [Hardware](docs/HARDWARE.md) · [Build from source](docs/PICKER.md)
+- [Install or update your dial](https://colombod.github.io/dnd-companion/guide/v0.1.7/install.html) · [USB orientation checker](https://colombod.github.io/dnd-companion/usb/index.html)
+- [Illustrated player manual](https://colombod.github.io/dnd-companion/guide/v0.1.7/index.html) · [Release features](https://colombod.github.io/dnd-companion/guide/v0.1.7/features.html) · [Rulebook coverage](https://colombod.github.io/dnd-companion/guide/v0.1.7/rules.html)
+- [Firmware downloads](https://github.com/colombod/dnd-companion/releases/tag/v0.1.7) · [Hardware](docs/HARDWARE.md) · [Build from source](docs/PICKER.md)
 
 MIT licensed.

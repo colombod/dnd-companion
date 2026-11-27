@@ -259,7 +259,7 @@ Tap the top status arc on the picker or character sheet, then **Firmware**. This
 
 ![Firmware showing the installed version and Build ID above the separate Check now control](screens/guide/build-info.png)
 
-This 360 × 360 example was rendered on a Mac from the development firmware. Opening this screen leaves the updater idle. To install over Wi-Fi, tap **Check now**, read the version and changes, then tap **Install update**. Swipe right to decline. Firmware 0.1.6 checks the main repository for compatible updates. The [installation guide](INSTALL.md) walks through the USB migration from 0.1.5.
+This 360 × 360 example was rendered on a Mac from the development firmware. Opening this screen leaves the updater idle. To install over Wi-Fi, tap **Check now**, read the version and changes, then tap **Install update**. Swipe right to decline. Firmware 0.1.6 can install 0.1.7 over Wi-Fi from the main repository. The [installation guide](INSTALL.md) walks through the USB migration from 0.1.5.
 
 A compatible Wi-Fi update keeps the previous firmware on the dial. Under **Firmware**, tap **Previous firmware**, check its version, then tap **Restore now**. Swipe right to cancel. The dial restarts into that firmware with the latest saved game and Wi-Fi settings.
 
