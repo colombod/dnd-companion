@@ -26,7 +26,7 @@ INSTALL_REVISIONS = {
     "v0.1.7": "refs/tags/guide-v0.1.7-install.1",
 }
 # Player-text corrections are pinned separately from tested installation instructions.
-PLAY_REVISIONS = {"v0.1.7": "refs/tags/guide-v0.1.7-play.1"}
+PLAY_REVISIONS = {"v0.1.7": "refs/tags/guide-v0.1.7-play.2"}
 USB_ZIP = "first-usb-0.1.5.zip"
 USB_URL = f"https://github.com/colombod/dnd-companion-firmware/releases/download/v0.1.5/{USB_ZIP}"
 USB_SHA256 = "b0f27986f2f9cfd678623dd0c13dd4fe6c5b45b985ed166b99aa1847f0dab9c2"
