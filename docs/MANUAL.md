@@ -100,8 +100,12 @@ Tap the top arc on the character picker or sheet, then **Language**. Tap **Engli
 
 | 3 · Connect the dial to table Wi-Fi | 4 · Add the character |
 | --- | --- |
-| ![Phone controls for saved networks, nearby Wi-Fi, password visibility and Connect dial](screens/guide/phone-wifi.png) | ![Phone form with D&D Beyond links, optional background and Add to dial](screens/guide/phone-links.png) |
-| Pick the network and tap **Connect dial**. Next time, use **Connect saved**. | Paste an individually accessible character link, tap **Add to dial**, and wait for the import result. |
+| ![Table Wi-Fi with the nearby network Game Night selected and the Connect dial and Save network buttons below its password field](screens/guide/phone-wifi.png) | ![Phone form with D&D Beyond links, optional background and Add to dial](screens/guide/phone-links.png) |
+| Choose **Connect dial** to join now or **Save network** to keep it for later. | Paste an individually accessible character link, tap **Add to dial**, and wait for the import result. |
+
+**Forget a saved network.** Tap **Forget** next to its name. In this example, **Forget network** removes Game Night from the dial. The Lantern stays saved.
+
+![Phone asking “Forget Game Night on this dial?” with Forget network and Cancel under that row](screens/guide/phone-forget.png)
 
 ## Profile icon and alternate background
 
