@@ -20,7 +20,7 @@ Tap the top status arc and open **Firmware** to read your installed version and 
 2. Keep the dial powered while it downloads, verifies the app and restarts. Open **Firmware** again and check for **Installed v0.1.8** and build **e4a9e8b38**.
 3. To go back, tap **Previous firmware**. Check the version in the preview, then tap **Restore now**. The dial restarts into its previous app and opens the same local saves. From 0.1.7, look for build **78c0e14f6**. From 0.1.6, look for **dcf978eee**. You can install 0.1.8 again through **Check now**.
 
-| Accept the update | Go back to the previous app |
+| Update offer on the dial (detail) | Restore confirmation on the dial (detail) |
 | --- | --- |
 | ![Dial displaying the 0.1.8 offer, download size and Install update](screens/guide/offer-v018.png) | ![Dial showing the 0.1.7 restore preview and Restore now](screens/guide/restore-v017.png) |
 | Checking lets you read the offer before the download starts. | Returning uses the earlier app already on the dial. Your current play state stays available. |
