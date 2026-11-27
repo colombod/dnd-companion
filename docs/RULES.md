@@ -150,7 +150,7 @@ The engine uses the class, unlocked feature and spell grant on the accepted char
 
 Tap **Undo** to reverse the latest recorded spend or rest. If you gain a feature on Beyond, refresh the sheet and review the change. [Play a Forge Artificer on the dial](MANUAL.md#playing-a-forge-artificer)
 
-If a rule you use at the table is missing, tell us which edition and book it comes from and what you would expect to happen on the dial. [Request a rule or feature](https://github.com/colombod/dnd-companion/issues/new?template=player-feature.yml)
+If a rule you use at the table is missing, tell us which edition and book it comes from and what you would expect to happen on the dial. [Request a rule or feature](https://github.com/colombod/dnd-companion/issues/new/?template=player-feature.yml)
 
 <!-- player-guide:end -->
 

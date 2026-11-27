@@ -26,5 +26,5 @@ The dial follows the active character. Turn the ring or swipe to another saved c
 
 For your class or spell, see what the dial calculates and what your table resolves. [D&D editions and rule coverage](RULES.md)
 
-Missing something your character does in play? Tell us your edition, the feature or item, and what you would like to do on the dial. [Request a feature on GitHub](https://github.com/colombod/dnd-companion/issues/new?template=player-feature.yml)
+Missing something your character does in play? Tell us your edition, the feature or item, and what you would like to do on the dial. [Request a feature on GitHub](https://github.com/colombod/dnd-companion/issues/new/?template=player-feature.yml)
 <!-- player-guide:end -->
