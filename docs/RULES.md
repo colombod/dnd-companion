@@ -1,9 +1,17 @@
 <!-- player-guide:start -->
 # Which D&D rules does my dial use?
 
+The dial supports player characters built with **D&D fifth edition**, using the **2014 or 2024 rules**, including mixed sheets. The class, spell or feature on your accepted D&D Beyond sheet determines which supported rule applies. There is no global edition setting. Earlier D&D editions and other tabletop systems need a different rules engine.
+
+## What happens when I use a feature?
+
+- **The dial calculates or spends.** Spin for an Arcana check to roll with your imported modifier. Cast *Eldritch Blast* as a Warlock 4 / Sorcerer 2 and the dial offers two beams because your total character level is 6. Cast a spell using a recognized slot or feature and the preview shows what you will spend.
+- **The dial prompts and you decide.** Record Bardic Inspiration under **Effects** to see it on eligible rolls. You decide when the effect applies. A Cartographer’s Guided Precision reminder leaves the target and once-per-turn use to you.
+- **Your table resolves the rest.** A spell may display a save DC and damage dice. The target rolls its save and your table applies the outcome. Track general Concentration, conditions, Hit Dice and initiative order separately. A homebrew action can show its imported dice without automating the rest of its description.
+
 ## Rulebooks and expansions
 
-Tap the **top status arc → Firmware** to see your installed version. The Forge Artificer counters first appear in **0.1.1**. After installing it, open the character and choose **Refresh sheet**, then accept the update to import its feature grants. The dial reads the versions of the class, spell and granting feature on each accepted D&D Beyond sheet. There is no edition switch to set for the whole library.
+Find the source of the **specific feature** on your sheet. The table lists individual mechanics supported from each book. An imported name or description alone cannot grant a weapon bonus, spend a charge or apply an effect.
 
 | Book on your sheet | What the dial handles | What you handle at the table |
 | --- | --- | --- |
@@ -15,7 +23,7 @@ Tap the **top status arc → Firmware** to see your installed version. The Forge
 | **Eberron: Forge of the Artificer** | The revised Artificer has multiclass slot rounding, Flash of Genius spending and recovery, and Cartographer’s two ways to cast *Faerie Fire*. Guided Precision supplies reminders. The feature table below gives the level and rest conditions. | Track replicated items, stored spells, map placement, companions and Guided Precision’s turn and target. Alchemist, Armorer, Artillerist and Battle Smith can use eligible base-class features. Their specialist mechanics have no dedicated counters. [Forge of the Artificer](https://www.dndbeyond.com/sources/dnd/efota) |
 | **Arcana Unleashed** | A Vestige Patron Warlock sheet imports through the ordinary checks, spells, actions and equipment paths. Recognized dice and modifiers work on those entries. | Run the vestige and patron-specific effects from the sheet. The patron name alone grants no Pact Weapon benefit on the dial. [Arcana Unleashed](https://www.dndbeyond.com/sources/dnd/au) |
 
-**Other sources.** The importer accepts recognized entries regardless of the source book. A feat, magic item or homebrew action may therefore appear and have rollable dice. Its presence establishes only the displayed roll or cost. Unresolved entries can say **Check your sheet**. The Dungeon Master’s Guide, Monster Manual, other settings, playtest material and third-party books have no separately verified book-wide support here. The firmware has no D&D 3.5, Pathfinder, Call of Cthulhu or Daggerheart rules profile.
+**Other sources.** The importer accepts recognized entries regardless of the source book. A feat, magic item or homebrew action may therefore appear and have rollable dice. Its presence establishes only the displayed roll or cost. Unresolved entries can say **Check your sheet**. The Dungeon Master’s Guide, Monster Manual, other settings, playtest material and third-party books have no separately verified book-wide support here.
 
 **Reading a mixed-edition sheet.** A character can have a revised Sorcerer class and a legacy spell. The class determines Sorcery Point costs and recovery. The spell’s own record determines which spell-specific effect the dial can run. For example, choosing the legacy *Armor of Agathys* leaves its temporary HP and retaliation to the player, even on a revised character. The common roll and casting rules are drawn from the [2014 Basic Rules](https://www.dndbeyond.com/sources/dnd/basic-rules-2014) and [2024 Free Rules](https://www.dndbeyond.com/sources/dnd/br-2024).
 
@@ -56,7 +64,8 @@ This Cartographer has two grants of the same spell. Look just under the spell na
 
 These are the 0.1.1 firmware screens rendered on macOS with the publisher’s example Cartographer. [Official Cartographer example](https://www.dndbeyond.com/posts/2113-preview-the-new-cartographer-artificer-subclass)
 
-### Which spells have their own rules?
+<!-- player-guide:start -->
+## Which spells have their own rules?
 
 | Imported spell version | Additional behavior beyond the common spell roller |
 | --- | --- |
@@ -67,7 +76,10 @@ These are the 0.1.1 firmware screens rendered on macOS with the publisher’s ex
 | *Sorcerous Burst*, *Chromatic Orb* and *Witch Bolt*, 2024 | Respectively add bounded extra dice on maximum faces, flag matching dice for a possible leap, and keep the follow-up damage from doubling on a critical. The player resolves targets and ongoing effects. |
 | *Faerie Fire*, 2024, on an eligible Forge Cartographer | Distinguish the slot cast from the feature-use cast and display the applicable concentration reminder. |
 
-Other spells can use their imported attack bonus or save DC, damage or healing dice, casting modifier and supported upcast increments. A target’s saving throw, a conditional rider or a resource with no recognized counter still needs the player. [Spell importer](../firmware/Companion/move_import.h) · [Cast and damage rules](../firmware/Companion/spell_rules.h)
+Other spells can use their imported attack bonus or save DC, damage or healing dice, casting modifier and supported upcast increments. A target’s saving throw, a conditional rider or a resource with no recognized counter still needs the player.
+<!-- player-guide:end -->
+
+[Spell importer](../firmware/Companion/move_import.h) · [Cast and damage rules](../firmware/Companion/spell_rules.h)
 
 ## How a character supplies a roll
 
@@ -124,7 +136,7 @@ A Pact Weapon requires an active `enable-pact-weapon` modifier and an inventory 
 Equipment imports distinguish a worn suit, a wielded shield and the item instance tagged as a pact weapon. A manual sheet AC bonus is presented separately so a player can represent a spell explicitly. The session record stores the cast and its ward in a single transaction. Existing records retain their slot spending, Sorcery Points and previous Undo when read in the new format. Game time is advanced at the table. For 2024 Agathys, the eligible melee hit reads the ward before damage consumes temporary HP. The attacker’s cold damage uses the casting level even if a different source later replaces the temporary HP. [2024 Sage Advice](https://www.dndbeyond.com/sources/dnd/sae/sage-advice-compendium) · [Pact of the Blade and Armor of Shadows](https://www.dndbeyond.com/sources/dnd/br-2024/character-classes#EldritchInvocationOptions) · [Armor and shields](https://www.dndbeyond.com/sources/dnd/br-2024/equipment#Armor)
 
 <!-- player-guide:start -->
-### Published supplements and class versions
+## Published supplements and class versions
 
 The engine uses the class, unlocked feature and spell grant on the accepted character sheet. The 2014 and revised versions of a class can coexist in the library. For multiclass slots the importer reads the divisor and rounding direction from each casting class or subclass. A level 3 Forge Artificer plus a level 2 Wizard has four level 1 slots and three level 2 slots. A level 3 legacy Paladin plus the same Wizard has four and two. A separate Warlock pool remains available for Pact Magic. An unknown multiclass rounding rule sends slot expenditure to sheet review. [2014 multiclassing](https://www.dndbeyond.com/sources/dnd/basic-rules-2014/customization-options#Multiclassing) · [2024 multiclassing](https://www.dndbeyond.com/sources/dnd/br-2024/creating-a-character#Multiclassing) · [D&D Beyond class configuration](https://www.dndbeyond.com/api/config/json)
 
@@ -136,7 +148,9 @@ The engine uses the class, unlocked feature and spell grant on the accepted char
 | Guided Precision | Eligible spell and attack details remind the player of the once-per-turn damage adjustment. *Faerie Fire* details show its protection against losing Concentration from damage. The player tracks the turn, affected target and optional damage adjustment. |
 | Item and map features | The Actions page shows entries supplied by the sheet. Replicated-item inventory, charge and drain transactions, Spell-Storing Item charges, deployed maps and subclass companions still require the sheet. |
 
-The rest logic and both use counters share the session transaction and its Undo. Existing sessions import the new counters on first use. Refreshing an accepted build preserves local spending and adjusts the maximum. Feature IDs and level gates distinguish Forge mechanics from legacy Artificers and similarly named homebrew. The relevant published sources are the [Forge book](https://www.dndbeyond.com/sources/dnd/efota), [official Artificer changes](https://www.dndbeyond.com/posts/2106-whats-new-with-the-artificer-in-eberron-forge-of) and the [published Cartographer example and sheet](https://www.dndbeyond.com/posts/2113-preview-the-new-cartographer-artificer-subclass).
+Tap **Undo** to reverse the latest recorded spend or rest. If you gain a feature on Beyond, refresh the sheet and review the change. [Play a Forge Artificer on the dial](MANUAL.md#playing-a-forge-artificer)
+
+If a rule you use at the table is missing, tell us which edition and book it comes from and what you would expect to happen on the dial. [Request a rule or feature](https://github.com/colombod/dnd-companion/issues/new?template=player-feature.yml)
 
 <!-- player-guide:end -->
 

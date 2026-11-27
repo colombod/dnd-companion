@@ -1,0 +1,22 @@
+name: Request a player feature or rule
+description: Describe something you want to do with your character at the table.
+title: "[Player feature] "
+body:
+  - type: textarea
+    id: play
+    attributes:
+      label: What are you trying to do at the table?
+      description: Describe the play, what the dial does today, and what you would like it to show, roll or track.
+      placeholder: When another player fails a save, I want to …
+    validations:
+      required: true
+  - type: input
+    id: rule
+    attributes:
+      label: Which rule is involved, if any?
+      description: Include the edition (2014 or 2024), sourcebook and feature name if you know them.
+  - type: input
+    id: version
+    attributes:
+      label: Firmware version, if you have a dial
+      description: Find Installed and Build ID under the top status arc → Firmware.

@@ -176,6 +176,8 @@ a:hover { color: #e5fff7; }
 .contents a:hover { color: var(--gold); text-decoration: underline; }
 .colophon { border-top: 1px solid #364547; background: #0a1118; }
 .colophon-inner { padding-block: 1.65rem; }
+.independence { max-width: calc(var(--max) + var(--gutter) * 2); margin: 0 auto; padding: 0 var(--gutter) 1.5rem; color: var(--muted); font-size: .92rem; }
+.reference-version summary { cursor: pointer; color: var(--sea); }
 .colophon .footer-brand { color: #cfc9b9; font-size: 1.4rem; }
 .colophon-inner > div { font-size: .88rem; }
 @media (max-width: 58rem) {
@@ -233,7 +235,8 @@ a:hover { color: #e5fff7; }
 }
 
 .archive-notice {
-  margin: 1.25rem 0 0;
+  max-width: var(--max);
+  margin: 1.25rem var(--gutter) 0;
   padding: .7rem 1rem;
   border-inline-start: 2px solid #cd9c52;
   background: #1b2931;

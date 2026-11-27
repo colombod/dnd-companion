@@ -25,6 +25,8 @@ INSTALL_REVISIONS = {
     "v0.1.5": "refs/tags/guide-v0.1.5-usb.1",
     "v0.1.7": "refs/tags/guide-v0.1.7-install.1",
 }
+# Player-text corrections are pinned separately from tested installation instructions.
+PLAY_REVISIONS = {"v0.1.7": "refs/tags/guide-v0.1.7-play.1"}
 USB_ZIP = "first-usb-0.1.5.zip"
 USB_URL = f"https://github.com/colombod/dnd-companion-firmware/releases/download/v0.1.5/{USB_ZIP}"
 USB_SHA256 = "b0f27986f2f9cfd678623dd0c13dd4fe6c5b45b985ed166b99aa1847f0dab9c2"
@@ -97,6 +99,16 @@ def page(target, prefix, title, body, nav):
     target.write_text(template.substitute(prefix=prefix, title=escape(title), body=body, nav=nav))
 
 
+def release_highlight(features, version):
+    headings = re.findall(r"^## What’s new in (.+)$", features, re.MULTILINE)
+    if headings != [version]:
+        raise ValueError(f"Keep one release highlight for {version} in docs/FEATURES.md")
+    paragraph = features.partition(f"## What’s new in {version}\n")[2].strip().split("\n\n", 1)[0]
+    if not paragraph or paragraph.startswith("#"):
+        raise ValueError(f"Missing release highlight text for {version}")
+    return paragraph
+
+
 def render_version(output, tag, latest_tag=None):
     release = f"refs/tags/{tag}" if tag else None
     version = content("firmware/VERSION", release).decode().strip()
@@ -109,19 +121,23 @@ def render_version(output, tag, latest_tag=None):
     guides = [
         ("docs/MANUAL.md", "index.html", "Player manual", False),
         ("docs/INSTALL.md", "install.html", "Installation", False),
-        ("docs/FEATURES.md", "features.html", "Release features", True),
-        ("docs/RULES.md", "rules.html", "Rulebooks", True),
+        ("docs/FEATURES.md", "features.html", "Supported features", True),
+        ("docs/RULES.md", "rules.html", "Rules coverage", True),
     ]
     pages = {}
     assets = {}
+    highlight = None
     for source, filename, title, excerpt in guides:
-        revision = INSTALL_REVISIONS.get(tag, release) if filename == "install.html" else release
+        revisions = INSTALL_REVISIONS if filename == "install.html" else PLAY_REVISIONS
+        revision = revisions.get(tag, release)
         body = content(source, revision).decode()
         if excerpt:
             sections = re.findall(r"<!-- player-guide:start -->(.*?)<!-- player-guide:end -->", body, re.S)
             if not sections:
                 raise ValueError(f"Missing player guide sections in {source}")
             body = "\n\n".join(sections)
+        if filename == "features.html" and tag == latest_tag:
+            highlight = release_highlight(body, version)
         refs = set(ASSET.findall(body))
         if filename == "install.html":
             factory_tool = "install/prepare_first_usb_015.py"
@@ -141,21 +157,20 @@ def render_version(output, tag, latest_tag=None):
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_bytes(data)
     nav = (f'<span>{label}</span><a href="install.html">Install</a><a href="index.html">Manual</a>'
-           '<a href="features.html">Features</a><a href="rules.html">Rulebooks</a>'
-           '<a href="../../index.html">All versions</a>')
+           '<a href="features.html">Features</a><a href="rules.html">Rules coverage</a>'
+           '<a href="../../index.html#versions">Firmware guides</a>')
     for filename, (title, text) in pages.items():
         for source, target, _, _ in guides:
             text = text.replace("](" + Path(source).name, "](" + target)
         html = subprocess.check_output(["pandoc", "-f", "gfm", "-t", "html5", "--wrap=none",
                                         "--toc", "--toc-depth=3", "--template", str(GUIDE / "article.html")],
                                        input=text, text=True)
-        if tag and latest_tag and tag != latest_tag and filename == "install.html":
-            current_url = f"../{latest_tag}/install.html"
-            html = (f'<p class="archive-notice">Reading the {version} installation guide. '
-                    f'<a href="{current_url}">See current USB and Wi-Fi update paths</a>.</p>' + html)
+        if tag and latest_tag and tag != latest_tag:
+            html = (f'<p class="archive-notice">Archived guide for firmware {version}. '
+                    f'<a href="../{latest_tag}/{filename}">See the current guide</a>.</p>' + html)
         page(directory / filename, "../../", f"{title} · {label}", html,
              nav.replace(f'href="{filename}"', f'href="{filename}" aria-current="page"'))
-    return path, label
+    return path, label, highlight
 
 
 def main():
@@ -172,15 +187,20 @@ def main():
         output.mkdir()
         build_usb_checker(output / "usb")
         guides = [render_version(output, tag, tags[0]) for tag in tags]
-        first, label = guides[0]
+        first, label, highlight = guides[0]
         shutil.copyfile(GUIDE / "guide-hero.webp", output / "guide-hero.webp")
         shutil.copytree(GUIDE / "fonts", output / "fonts")
         (output / "guide.css").write_bytes((GUIDE / "guide.css").read_bytes())
         latest = f"refs/tags/{tags[0]}" if tags[0] else None
         (output / "dragon-eye.jpg").write_bytes(content("docs/screens/art/dragon-eye.jpg", latest))
-        links = "".join(f'<li><a href="{url}/index.html">{name}</a></li>' for url, name in guides)
-        home = Template((GUIDE / "home.html").read_text()).substitute(first=first, label=label, links=links)
-        page(output / "index.html", "", "Player guides", home, '<a href="#at-the-table">At the table</a><a href="#versions">Firmware versions</a>')
+        links = "".join(f'<li><a href="{url}/index.html">{name}</a></li>' for url, name, _ in guides[1:])
+        archive = (f'<details><summary>Earlier firmware guides</summary><ul class="version-list">{links}</ul></details>'
+                   if links else "")
+        home = Template((GUIDE / "home.html").read_text()).substitute(
+            first=first, label=label, version=Path(first).name.removeprefix("v"), highlight=escape(highlight), archive=archive)
+        page(output / "index.html", "", "Player guide", home,
+             '<a href="#release">What’s new</a><a href="#at-the-table">At the table</a>'
+             '<a href="#rules">Rules &amp; requests</a><a href="#hardware">Hardware</a>')
         (output / ".nojekyll").touch()
         check_links(output)
         if dest.exists():

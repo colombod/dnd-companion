@@ -35,3 +35,5 @@ screens, input, peripherals, storage, asset formats or network behavior.
 For a new supplement, identify the published class or feature on the imported sheet. Check its final rules and current official corrections. Exercise the normal filtered import and play transaction with an eligible build, a legacy or ineligible build, and an existing saved session when the storage format changes. Record the source and the automated or player-adjudicated behavior in [the rules reference](docs/RULES.md).
 
 When that coverage changes, update the versioned book table and its manual links. Distinguish an imported spell or action, an engine-enforced rule, a reminder, and a decision the player makes at the table. Include a worked example of any new spending or recovery rule in the player guide.
+
+Keep player instructions in the present tense. Put the single current release highlight and working features in `docs/FEATURES.md`, proposals in `docs/FEATURE-DESIGN.md`, and version-specific USB and restore paths in `docs/INSTALL.md`. See [guide publication](guide/README.md) for correcting an already published guide.
