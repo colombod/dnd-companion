@@ -1,23 +1,45 @@
-<section class="hero">
-  <div>
+<section class="hero" aria-labelledby="guide-title">
+  <div class="hero-content">
     <p class="version">$label</p>
-    <h1>Player guide</h1>
-    <p>Install the companion on your Waveshare dial, add your D&amp;D Beyond characters, and play from your saved sheets.</p>
-    <a class="primary" href="$first/install.html">Install or update</a>
-    <a class="secondary" href="$first/index.html">Open the manual</a>
+    <h1 id="guide-title">The player’s<br><em>field guide</em></h1>
+    <p class="hero-intro">Bring your D&amp;D Beyond character to the dial. Roll checks, cast spells and track your turn at the table.</p>
+    <div class="hero-actions">
+      <a class="primary" href="$first/install.html">Install or update</a>
+      <a class="secondary" href="$first/index.html#set-up-at-the-table">Set up a character</a>
+    </div>
   </div>
-  <img width="360" height="360" src="$first/screens/guide/spellbook.png" alt="Spellbook on the round dial showing spell slots and the character’s available spells">
 </section>
-<section class="shortcuts" aria-label="At the table">
-  <a href="$first/features.html">Features in this release</a>
-  <a href="$first/index.html#set-up-at-the-table">Set up a character</a>
-  <a href="$first/index.html#roll-a-check-or-a-save">Roll a check or save</a>
-  <a href="$first/index.html#cast-a-spell">Cast a spell</a>
-  <a href="$first/index.html#use-your-pack-and-purse">Use your pack</a>
-  <a href="$first/rules.html">See supported rulebooks</a>
+
+<section class="table-guide inset" id="at-the-table" aria-labelledby="table-title">
+  <div class="section-heading">
+    <h2 id="table-title">At the table</h2>
+    <a class="text-link" href="$first/index.html">Open the player manual</a>
+  </div>
+  <div class="dial-shelf">
+    <a class="move" href="$first/index.html#roll-a-check-or-a-save">
+      <span class="dial-well"><img src="$first/screens/guide/skills.png" width="360" height="360" loading="lazy" alt=""></span>
+      <span class="move-text"><strong>Checks &amp; saves</strong><span>Choose a skill or save and spin to roll with your character’s modifier.</span></span>
+    </a>
+    <a class="move" href="$first/index.html#cast-a-spell">
+      <span class="dial-well"><img src="$first/screens/guide/eldritch-blast.png" width="360" height="360" loading="lazy" alt=""></span>
+      <span class="move-text"><strong>Spellcasting</strong><span>Pick a spell, review its cost, and roll its attack or damage.</span></span>
+    </a>
+    <a class="move" href="$first/index.html#use-your-pack-and-purse">
+      <span class="dial-well"><img src="$first/screens/guide/pack-bag.png" width="360" height="360" loading="lazy" alt=""></span>
+      <span class="move-text"><strong>Pack &amp; purse</strong><span>Find your potions, spend coin and keep track of what you carry.</span></span>
+    </a>
+  </div>
 </section>
-<section id="versions">
-  <h2>Find your firmware guide</h2>
-  <p>On the dial, tap the top status arc, open <strong>Firmware</strong>, and match the <strong>Installed</strong> number below.</p>
-  <ul>$links</ul>
+
+<section class="references inset" aria-labelledby="versions">
+  <div class="reference-version">
+    <h2 id="versions">Firmware guides</h2>
+    <p>On the dial, tap the top status arc and open <strong>Firmware</strong>. Choose the guide that matches your installed version.</p>
+    <ul class="version-list">$links</ul>
+  </div>
+  <div class="reference-links">
+    <a href="$first/features.html">Features in this release</a>
+    <a href="$first/rules.html">Supported rulebooks</a>
+    <a href="$first/index.html#hit-points-death-saves-and-stabilization">Hit points &amp; death saves</a>
+  </div>
 </section>

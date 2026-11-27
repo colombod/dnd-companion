@@ -143,9 +143,11 @@ def render_version(output, tag):
     for filename, (title, text) in pages.items():
         for source, target, _, _ in guides:
             text = text.replace("](" + Path(source).name, "](" + target)
-        html = subprocess.check_output(["pandoc", "-f", "gfm", "-t", "html5", "--wrap=none"],
+        html = subprocess.check_output(["pandoc", "-f", "gfm", "-t", "html5", "--wrap=none",
+                                        "--toc", "--toc-depth=3", "--template", str(GUIDE / "article.html")],
                                        input=text, text=True)
-        page(directory / filename, "../../", f"{title} · {label}", html, nav)
+        page(directory / filename, "../../", f"{title} · {label}", html,
+             nav.replace(f'href="{filename}"', f'href="{filename}" aria-current="page"'))
     return path, label
 
 
@@ -164,12 +166,14 @@ def main():
         build_usb_checker(output / "usb")
         guides = [render_version(output, tag) for tag in tags]
         first, label = guides[0]
+        shutil.copyfile(GUIDE / "guide-hero.webp", output / "guide-hero.webp")
+        shutil.copytree(GUIDE / "fonts", output / "fonts")
         (output / "guide.css").write_bytes((GUIDE / "guide.css").read_bytes())
         latest = f"refs/tags/{tags[0]}" if tags[0] else None
         (output / "dragon-eye.jpg").write_bytes(content("docs/screens/art/dragon-eye.jpg", latest))
         links = "".join(f'<li><a href="{url}/index.html">{name}</a></li>' for url, name in guides)
         home = Template((GUIDE / "home.html").read_text()).substitute(first=first, label=label, links=links)
-        page(output / "index.html", "", "Player guides", home, '<a href="#versions">Firmware versions</a>')
+        page(output / "index.html", "", "Player guides", home, '<a href="#at-the-table">At the table</a><a href="#versions">Firmware versions</a>')
         (output / ".nojekyll").touch()
         check_links(output)
         if dest.exists():

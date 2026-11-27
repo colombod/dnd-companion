@@ -3,16 +3,25 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#111923">
   <meta name="color-scheme" content="dark">
   <title>$title · D&amp;D Companion</title>
   <link rel="stylesheet" href="${prefix}guide.css">
 </head>
 <body>
   <a class="skip" href="#main">Skip to guide</a>
-  <header>
-    <a class="brand" href="${prefix}index.html"><img src="${prefix}dragon-eye.jpg" alt="" width="46" height="46"> D&amp;D Companion</a>
-    <nav aria-label="Guide navigation">$nav<a href="${prefix}usb/index.html">Check USB</a></nav>
+  <header class="masthead">
+    <div class="mast-inner">
+      <a class="brand" href="${prefix}index.html"><img src="${prefix}dragon-eye.jpg" alt="" width="42" height="42"><span>D&amp;D Companion</span></a>
+      <nav aria-label="Guide navigation">$nav<a class="usb-link" href="${prefix}usb/index.html">Check USB</a></nav>
+    </div>
   </header>
   <main id="main">$body</main>
+  <footer class="colophon">
+    <div class="colophon-inner">
+      <a class="footer-brand" href="${prefix}index.html">D&amp;D Companion</a>
+      <div><a href="${prefix}index.html#versions">Firmware guides</a><a href="https://github.com/colombod/dnd-companion/releases">Releases</a><a href="https://github.com/colombod/dnd-companion">Source on GitHub</a></div>
+    </div>
+  </footer>
 </body>
 </html>
