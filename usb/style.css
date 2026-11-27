@@ -1,0 +1,30 @@
+:root { color-scheme: dark; background: #101713; color: #f1eedf; font: 1rem/1.55 "Segoe UI", system-ui, sans-serif; }
+body { margin: 0; padding: 4vh 1.3rem; }
+main { max-width: 32rem; margin: auto; }
+header { display: flex; align-items: center; gap: 1.1rem; color: #d2ba84; }
+header img { border-radius: 50%; border: 1px solid #9d9065; }
+h1, h2 { font-family: Georgia, serif; font-weight: 500; line-height: 1.15; }
+h1 { font-size: clamp(2.6rem, 8vw, 3.8rem); margin: 1.3rem 0 .7rem; }
+h2 { font-size: 1.55rem; margin: 0 0 .4rem; }
+section { border-left: 3px solid #a1b691; padding: .3rem 1rem; margin: 1.8rem 0 1rem; }
+section p { margin: 0; }
+button { font: inherit; font-weight: 600; padding: .65rem 1.1rem; border-radius: 2rem; background: #e6cc8f; border: 0; color: #24231b; cursor: pointer; }
+button:disabled { opacity: .6; cursor: default; }
+summary { cursor: pointer; padding: .5rem 0; }
+details, footer { margin-top: 1.5rem; }
+footer { color: #b4bfb4; font-size: .9rem; }
+button:focus-visible, summary:focus-visible { outline: 3px solid #91e7d0; outline-offset: 3px; }
+header img { width: 52px; height: 52px; }
+section[data-state="confirmed"] { border-color: #92d6a3; }
+section[data-state="confirmed"] h2 { color: #b4e7bf; }
+aside { display: flex; gap: 1rem; align-items: center; margin: 1.6rem 0 0; padding: .9rem 1rem; border: 1px solid #435046; border-radius: .85rem; }
+aside img { width: clamp(6rem, 21vw, 9rem); height: auto; flex: none; }
+aside h2 { font-size: 1.25rem; }
+aside p { margin: 0; font-size: .95rem; }
+[hidden] { display: none; }
+@media (max-width: 30rem) { aside { align-items: flex-start; gap: .7rem; } #hardware { margin-top: .5rem; } }
+
+#update { margin: 1.5rem 0; }
+#update label, #update input { display: block; }
+#update input { margin: .5rem 0; max-width: 100%; font: inherit; }
+#preview { color: #d2dfce; }

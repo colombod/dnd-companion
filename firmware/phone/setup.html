@@ -1,0 +1,134 @@
+<!doctype html><html lang="{{lang}}"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>{{html:Dial setup}}</title>
+<style>
+:root{color-scheme:dark;font:17px system-ui;background:#111521;color:#f0e7d6}body{max-width:32rem;margin:auto;padding:1rem 1.3rem 4rem}
+h1,h2{font-family:Georgia,serif}h1{font-size:2.5rem;margin:.6em 0 .15em}h2{font-size:1.55rem;color:#e4c791}
+section{border-top:1px solid #554b41;margin-top:1.6em}label,textarea,input,select{display:block}textarea,input,select{box-sizing:border-box;width:100%;border:1px solid #645c59;border-radius:.4em;background:#191e2a;color:inherit;padding:.7em;margin:.35em 0 .8em;font:inherit}
+button{border:0;background:#e4c791;color:#171921;border-radius:2em;padding:.65em 1.2em;font:inherit;margin:.2em .35em .2em 0}
+li button,.alt{background:transparent;border:1px solid #786953;color:#eed9b1;font-size:.9em}small,.muted{color:#b6c7c7}
+ul{list-style:none;padding:0}li{padding:.45em 0}li small{display:block;margin:.15em 0}summary{cursor:pointer;padding:1em 0}
+input[type=checkbox]{display:inline;width:auto}.inline{margin-bottom:.7em}dialog{border:1px solid #786953;border-radius:1em;width:min(80vw,24rem);background:#191e2a;color:inherit}
+#crop canvas{display:block;width:min(65vw,36vh,300px);height:auto;border-radius:50%;touch-action:none;margin:auto;background:#111521}
+#crop{max-height:90dvh;overflow:auto}#crop input[type=range]{padding:0}
+</style><h1>{{html:Dial setup}}</h1><p id="wifi" class="muted">{{html:Reading connection…}}</p>
+<label>{{html:Language}}<select id="language"><option value="en" lang="en">English</option><option value="it" lang="it">Italiano</option><option value="es" lang="es">Español</option></select></label>
+<section id="review" hidden><h2>{{html:Review sheet update}}</h2><p id="before"></p><p id="after"></p><small id="revision"></small><p>
+<button id="apply">{{html:Apply update}}</button><button class="alt" id="keep">{{html:Keep current}}</button></p></section>
+<section><h2>{{html:Character picker}}</h2><label>{{html:Show in the picker}}<select id="pickerArt"><option value="both">{{html:Background + icon}}</option><option value="icon">{{html:Icon only}}</option><option value="background">{{html:Background only}}</option></select></label></section>
+<section><h2>{{html:Your characters}}</h2><ul id="library"></ul>
+<p><small>{{html:Use individual character links that open while signed out.}} <a href="https://www.dndbeyond.com/characters" rel="noopener noreferrer" target="_blank">{{html:Open My Characters on D&D Beyond}}</a></small></p><form id="add"><label>{{html:D&D Beyond links}}<textarea name="link" rows="3" required maxlength="3000" placeholder="{{html:Paste one character link per line}}"></textarea></label><label>{{html:Alternate background for one character (optional)}}<input type="file" accept="image/*" id="addPhoto"></label><button>{{html:Add to dial}}</button></form><ul id="jobs"></ul></section>
+<dialog id="crop"><h2>{{html:Crop background}}</h2><canvas id="preview" width="360" height="360" aria-label="{{html:Round crop preview}}"></canvas><p><small>{{html:Drag to frame the artwork. Only this 360 × 360 crop goes to the dial.}}</small></p><label>{{html:Zoom}}<input id="zoom" type="range" min="1" max="4" value="1" step="0.02"></label><button id="useCrop">{{html:Use crop}}</button><button id="cancelCrop" class="alt">{{html:Cancel}}</button></dialog>
+<input type="file" id="choosePhoto" accept="image/*" hidden style="display:none"><dialog id="editor"><form id="edit"><h2>{{html:Edit character link}}</h2><label id="editName" for="editURL"></label><input id="editURL" name="link" type="url" required><input type="hidden" name="id" id="editId">
+<button>{{html:Check link}}</button><button type="button" class="alt" id="cancel">{{html:Cancel}}</button></form></dialog>
+<section><details id="network"><summary>{{html:Table Wi-Fi}}</summary><p id="netmsg"></p>
+<ul id="saved"></ul><button class="alt" id="scan">{{html:Scan nearby networks}}</button>
+<form id="connect"><label>{{html:Nearby Wi-Fi}}<select id="nearby"><option value="">{{html:Enter another network…}}</option></select></label>
+<label id="manual">{{html:Network name}}<input name="ssid" maxlength="32" id="ssid"></label>
+<label>{{html:Password}}<input type="password" name="pass" maxlength="64" id="password" autocomplete="off"></label>
+<label class="inline"><input type="checkbox" id="show"> {{html:Show password}}</label><button>{{html:Connect dial}}</button></form></details></section>
+<p id="message" role="status"></p>
+<script>
+const el=id=>document.getElementById(id);let state={},first=true;const last={};
+const make=(tag,text)=>{const n=document.createElement(tag);n.textContent=text;return n};
+const btn=(title,fn)=>{const b=make('button',title);b.type='button';b.onclick=fn;return b};
+function changed(key,value){const str=JSON.stringify(value);if(last[key]===str)return false;last[key]=str;return true}
+async function post(path,fields={}){try{const r=await fetch(path,{method:'POST',body:new URLSearchParams(fields)});
+el('message').textContent=await r.text();await update();return r.ok}catch{el('message').textContent={{js:Reconnect to the dial and try again.}};return false}}
+function edit(id,name){el('editId').value=id;el('editName').textContent=name;el('editURL').value='https://www.dndbeyond.com/characters/'+id;el('editor').showModal()}
+async function update(){try{const r=await fetch('/status',{cache:'no-store'});if(!r.ok)return;const s=await r.json();state=s;
+const artworkPending=artBusy || waitingPhotos.size>0 || !!document.querySelector("dialog[open]");
+language.disabled=changingLanguage || artworkPending;
+if(s.language && s.language!==document.documentElement.lang && !language.disabled){location.reload();return}
+el('wifi').textContent=s.online?{{js:Connected to }}+s.network:{{js:Dial offline. Choose table Wi-Fi to fetch sheets.}};
+el('netmsg').textContent=s.networkMessage||'';if(first){el('network').open=!s.online;first=false}
+if(changed('pickerArt',s.pickerArt))el('pickerArt').value=s.pickerArt;
+if(changed('library',s.library))el('library').replaceChildren(...s.library.map(([name,detail,id,hasAvatar,background,cached,source])=>{const li=make('li',name);li.append(make('small',detail));
+if(id)li.append(btn({{js:Edit link}},()=>edit(id,name)),btn({{js:Remove}},()=>{if(confirm({{js:Remove }}+name+{{js: from this dial?}}))post('/character/remove',{id})}));if(id){
+li.append(btn(background?{{js:Replace background}}:{{js:Upload background}},()=>{photoTarget=id;el('choosePhoto').value='';el('choosePhoto').click()}));
+if(background)li.append(btn({{js:Remove background}},()=>{if(confirm({{js:Remove the background for }}+name+'?'))post('/avatar/reset',{id})}));
+if(hasAvatar)li.append(btn({{js:Refresh profile icon}},()=>remoteArt(id,source)));
+}return li}));
+if(changed('jobs',s.jobs))el('jobs').replaceChildren(...s.jobs.map(([id,msg])=>make('li',id+' · '+msg)));
+if(changed('saved',s.saved))el('saved').replaceChildren(...s.saved.map(ssid=>{const li=make('li',ssid);li.append(document.createElement('br'),btn({{js:Connect saved}},()=>post('/wifi',{ssid,reuse:'1'})),btn({{js:Forget}},()=>{if(confirm({{js:Forget }}+ssid+{{js: on this dial?}}))post('/wifi/forget',{ssid})}));return li}));
+if(changed('nearby',s.nearby)){const select=el('nearby'),prev=select.value;select.replaceChildren(new Option({{js:Enter another network…}},''),
+...s.nearby.map(([name,signal,locked])=>new Option(name+(locked?'':{{js: (open)}}),name)));select.value=prev;el('manual').hidden=!!select.value}
+el('scan').disabled=s.scanning;el('scan').textContent=s.scanning?{{js:Scanning…}}:{{js:Scan nearby networks}};
+el('review').hidden=!s.review;if(s.review){el('before').textContent={{js:On your dial: }}+s.review.before;el('after').textContent={{js:From Beyond: }}+s.review.after;el('revision').textContent=s.review.revision?{{js:Source updated }}+s.review.revision:''}
+processArt(s);
+}catch{}}
+const waitingPhotos=new Map(), tried=new Set();let photoTarget=0,artBusy=false;
+async function loadImage(file){
+ if(!file||file.size>16*1024*1024)throw Error({{js:Choose an image under 16 MiB.}});
+ const image=new Image(),url=URL.createObjectURL(file);
+ try{image.src=url;await image.decode();return image}finally{URL.revokeObjectURL(url)}
+}
+function drawCrop(canvas,img,zoom,x,y){
+ const side=canvas.width,span=Math.min(img.width,img.height)/zoom;
+ const left=Math.max(0,Math.min(img.width-span,x-span/2)),top=Math.max(0,Math.min(img.height-span,y-span/2));
+ const ctx=canvas.getContext('2d');ctx.fillStyle='#111521';ctx.fillRect(0,0,side,side);
+ ctx.save();ctx.beginPath();ctx.arc(side/2,side/2,side/2,0,2*Math.PI);ctx.clip();
+ ctx.drawImage(img,left,top,span,span,0,0,side,side);ctx.restore();
+ return [left+span/2,top+span/2];
+}
+async function jpeg(canvas,limit){
+ for(const quality of [.86,.76,.66,.54,.42,.30]){
+ const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',quality));if(blob&&blob.size<=limit)return blob}
+ throw Error({{js:Image could not fit the dial.}});
+}
+async function cropBackground(file){
+ const img=await loadImage(file),dialog=el('crop'),canvas=el('preview'),zoom=el('zoom');
+ let x=img.width/2,y=img.height/2,prev=null;
+ zoom.value=1;function draw(){[x,y]=drawCrop(canvas,img,Number(zoom.value),x,y)}draw();
+ zoom.oninput=draw;
+ canvas.onpointerdown=e=>{canvas.setPointerCapture(e.pointerId);prev=[e.clientX,e.clientY]};
+ canvas.onpointermove=e=>{if(!prev)return;const ratio=Math.min(img.width,img.height)/zoom.value/canvas.getBoundingClientRect().width;
+ x+=(prev[0]-e.clientX)*ratio;y+=(prev[1]-e.clientY)*ratio;prev=[e.clientX,e.clientY];draw()};
+ canvas.onpointerup=canvas.onpointercancel=()=>{prev=null};
+ const accepted=await new Promise(resolve=>{
+ dialog.onclose=()=>resolve(dialog.returnValue==='save');
+ el('useCrop').onclick=()=>dialog.close('save');el('cancelCrop').onclick=()=>dialog.close('cancel');
+ dialog.returnValue='';dialog.showModal()});
+ return accepted?jpeg(canvas,40960):null;
+}
+async function sendArt(id,blob,kind,source=0){
+ const body=new FormData();body.append('image',blob,kind+'.jpg');
+ const r=await fetch('/avatar?id='+id+'&kind='+kind+'&source='+source,{method:'POST',body});
+ if(!r.ok)throw Error(await r.text());el('message').textContent=kind==='icon'?{{js:Profile icon saved.}}:{{js:Background saved on the dial.}};
+}
+async function remoteArt(id,source){if(artBusy)return;artBusy=true;tried.add(id+'/'+source);
+ try{const base='/avatar/source?id='+id;let size=0;for(let poll=0;poll<100;poll++){const r=await fetch(base,{cache:'no-store'});if(r.status===202){await new Promise(res=>setTimeout(res,600));continue}if(!r.ok)throw Error(await r.text());size=Number(await r.text());break}
+ if(!size||size>4194304)throw Error({{js:Profile icon unavailable.}});const parts=[];
+ for(let offset=0;offset<size;){const r=await fetch(base+'&offset='+offset,{cache:'no-store'});if(r.status!==200)throw Error({{js:Icon transfer interrupted}});const part=await r.blob();if(!part.size)throw Error({{js:Icon transfer interrupted}});parts.push(part);offset+=part.size}
+ const img=await loadImage(new Blob(parts)),canvas=document.createElement('canvas');canvas.width=canvas.height=128;
+ drawCrop(canvas,img,1,img.width/2,img.height/2);await sendArt(id,await jpeg(canvas,12288),'icon',source);
+ }catch(e){el('message').textContent=e.message}finally{artBusy=false}}
+async function processArt(s){if(artBusy)return;for(const [name,detail,id,hasAvatar,background,cached,source] of s.library){
+ if(waitingPhotos.has(id)){const blob=waitingPhotos.get(id);waitingPhotos.delete(id);artBusy=true;try{await sendArt(id,blob,'background')}catch(e){el('message').textContent=e.message}finally{artBusy=false}return;}
+ if(s.online&&hasAvatar&&!cached&&!tried.has(id+'/'+source)){remoteArt(id,source);return;}}}
+el('choosePhoto').onchange=async e=>{const id=photoTarget;try{if(e.target.files[0]){const blob=await cropBackground(e.target.files[0]);if(blob)await sendArt(id,blob,'background')}await update()}catch(err){el('message').textContent=err.message}};
+const language=el('language');let changingLanguage=false;
+language.value=document.documentElement.lang;
+language.onchange=async ()=>{
+ const wanted=language.value;changingLanguage=true;language.disabled=true;
+ try{
+  const response=await fetch('/language',{method:'POST',body:new URLSearchParams({language:wanted})});
+  if(response.ok){location.reload();return}
+  el('message').textContent=await response.text();
+ }catch{el('message').textContent={{js:Reconnect to the dial and try again.}}}
+ language.value=document.documentElement.lang;changingLanguage=false;language.disabled=false;
+};
+el('pickerArt').onchange=async e=>{if(!await post('/picker/art',{mode:e.target.value}))el('pickerArt').value=state.pickerArt};
+el('add').onsubmit=async e=>{e.preventDefault();const link=e.target.elements.link.value.trim(),file=el('addPhoto').files[0];let id;
+ if(file){try{const u=new URL(link),match=u.pathname.match(/^\/characters\/(\d+)(?:\/[\w-]+)?\/?$/);if(!match||link.includes('\n'))throw Error();id=Number(match[1]);}
+ catch{el('message').textContent={{js:Add one link at a time when including a background.}};return;}
+ try{const blob=await cropBackground(file);if(!blob)return;waitingPhotos.set(id,blob)}catch(err){el('message').textContent=err.message;return;}}
+ if(await post('/character',{link}))el('add').reset();else if(id)waitingPhotos.delete(id)};
+el('edit').onsubmit=async e=>{e.preventDefault();if(await post('/character/edit',new FormData(e.target)))el('editor').close()};
+el('cancel').onclick=()=>el('editor').close();el('scan').onclick=()=>post('/wifi/scan');
+el('nearby').onchange=()=>{el('manual').hidden=!!el('nearby').value;el('password').value=''};
+el('show').onchange=()=>el('password').type=el('show').checked?'text':'password';
+el('connect').onsubmit=async e=>{e.preventDefault();const ssid=el('nearby').value||el('ssid').value,pass=el('password').value;
+if(await post('/wifi',{ssid,pass,reuse:!pass&&state.saved.includes(ssid)?'1':'0'})){el('password').value='';el('show').checked=false;el('password').type='password'}};
+const decide=apply=>{if(state.review)post('/review',{id:state.review.ticket,apply})};
+el('apply').onclick=()=>decide('1');el('keep').onclick=()=>decide('0');update();setInterval(update,2000);
+</script></html>

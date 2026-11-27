@@ -1,0 +1,41 @@
+:root { color-scheme: dark; background: #111916; color: #efede1; font: 100%/1.65 "Segoe UI", system-ui, sans-serif; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+main, header { width: min(64rem, calc(100% - 2.5rem)); margin: auto; }
+header { display: flex; gap: .75rem 2rem; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid #36463f; }
+.brand { display: inline-flex; align-items: center; gap: .7rem; color: #eacb87; text-decoration: none; font: 1.2rem Georgia, serif; }
+.brand img, .hero img { border-radius: 50%; border: 1px solid #776744; }
+nav, .shortcuts { display: flex; flex-wrap: wrap; gap: .3rem 1.5rem; align-items: center; }
+nav { font-size: .95rem; }
+nav span, .version { color: #c9ba97; }
+a { color: #e9cb88; text-underline-offset: .2em; }
+a:hover { color: #fff0c9; }
+a:focus-visible { outline: 3px solid #a4e5cb; outline-offset: 3px; }
+.skip { position: absolute; left: -100vw; }
+.skip:focus { left: 1rem; top: 1rem; padding: .6rem; background: #111916; }
+main { padding: 1.25rem 0 4rem; }
+h1, h2, h3 { line-height: 1.14; font-family: Georgia, serif; font-weight: 500; }
+h1 { margin: 1.3rem 0; font-size: clamp(2.55rem, 7vw, 4.4rem); }
+h2 { margin-top: 2.8rem; font-size: 2rem; }
+h3 { margin-top: 2rem; font-size: 1.55rem; }
+p, ol, ul { max-width: 74ch; }
+li { margin-bottom: .4rem; }
+.hero { display: grid; grid-template-columns: 1.4fr 1fr; align-items: center; gap: 2rem; padding: 2rem 0; }
+.hero img { width: min(100%, 19rem); height: auto; justify-self: center; }
+.hero h1 { margin: .4rem 0; }
+.primary, .secondary { display: inline-block; margin: .6rem 1rem .3rem 0; }
+.primary { padding: .55rem 1.15rem; border-radius: 2rem; color: #1b201a; font-weight: 650; background: #e9cb88; text-decoration: none; }
+.primary:hover { color: #111916; background: #f5ddab; }
+.shortcuts { border-block: 1px solid #36463f; padding: 1rem 0; }
+pre { max-width: 100%; overflow-x: auto; padding: .8rem; background: #1d2923; }
+table { display: block; overflow-x: auto; max-width: 100%; border-collapse: collapse; margin: 1.2rem 0; }
+th, td { vertical-align: top; text-align: left; padding: .65rem; border-bottom: 1px solid #36463f; }
+th { background: #1d2923; }
+main img { max-width: 100%; height: auto; }
+td img { width: min(32vw, 22.5rem); max-width: none; }
+@media (max-width: 40rem) {
+  .hero { grid-template-columns: 1fr; gap: .5rem; padding-top: .5rem; }
+  .hero img { width: 10rem; margin: .65rem 0; }
+  nav { gap: .5rem 1rem; }
+  th, td { min-width: 8rem; }
+}

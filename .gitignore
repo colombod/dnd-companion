@@ -1,0 +1,15 @@
+
+# Beads / Dolt files (added by bd init)
+.dolt/
+*.db
+.beads-credential-key
+.beads/
+.build/
+.local/
+# Local recovery images, device settings and user profiles
+/backups/
+/recovery/
+/profiles/
+*.nvs
+*.bin
+__pycache__/

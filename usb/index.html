@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Check your dial · D&amp;D Companion</title>
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./site.mjs"></script>
+</head>
+<body>
+  <main>
+    <header><img src="./dragon-eye.jpg" alt="" width="52" height="52"><p>D&amp;D Companion</p></header>
+    <h1>Check your dial</h1>
+    <p>Connect your Waveshare ESP32-S3-Knob-Touch-LCD-1.8 with a USB data cable. The plug at the dial selects which of its two processors the computer sees.</p>
+    <section aria-live="polite" aria-atomic="true">
+      <h2 id="title">Find the main USB port</h2>
+      <p id="message">Choose <strong>Check my dial</strong>. In the browser list, select <strong>USB JTAG/serial debug unit</strong> (also called Espressif USB Serial/JTAG), then <strong>Connect</strong>.</p>
+    </section>
+    <button id="connect" disabled>Check my dial</button>
+    <button id="hardware" hidden>Restart and check processor</button>
+    <div id="update" hidden>
+      <h2>One-time USB update</h2>
+      <p>Install Companion 0.1.4 to enable opt-in Wi-Fi updates. Your characters, artwork and Wi-Fi settings stay on the dial.</p>
+      <label for="image">Choose the 0.1.4 app-only firmware (.bin)</label>
+      <input id="image" type="file" accept=".bin">
+      <p id="preview" role="status"></p>
+      <button id="install" hidden>Install 0.1.4</button>
+    </div>
+    <aside id="flip" aria-labelledby="flip-title">
+      <img src="./dial-end.svg" width="146" height="88" alt="Round dial and an unplugged USB-C plug. A curved arrow shows a half-turn around the cable’s long axis.">
+      <div><h2 id="flip-title">Empty port list?</h2>
+      <p>Close the list. Unplug <strong>at the dial</strong>, turn the plug over <strong>180°</strong>, and plug it back in. Leave the computer end connected. Choose <strong>Check my dial</strong> again.</p></div>
+    </aside>
+    <details id="both-ways"><summary>Already tried both ways?</summary>
+      <p>Use a cable that can transfer files and connect directly to the computer. Close Arduino Serial Monitor or other apps using the port, then try again in desktop Chrome or Edge.</p>
+    </details>
+    <footer>Checking the cable is read-only. Installation requires a separate confirmation.</footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 146 88">
+  <title>Turn the disconnected USB-C plug over at the dial</title>
+  <!-- Side view of the dial and plug. The arc wraps around the cable axis. -->
+  <g stroke-linejoin="round" stroke-width="2">
+    <path d="M7 31 Q7 24 29 22 Q51 20 62 28 L62 53 Q61 61 34 62 Q9 61 7 54Z" fill="#29362f" stroke="#9db6a7"/>
+    <ellipse cx="34.5" cy="30.5" rx="27.5" ry="9.5" fill="#17201b" stroke="#aaba9d"/>
+    <ellipse cx="34.5" cy="30.5" rx="20.5" ry="5.3" fill="#283a33" stroke="#617f70"/>
+    <path d="M51 46 L59 44 Q60 44 60 46 L60 49 L51 51Z" fill="#0d1511" stroke="#aaba9d"/>
+    <path d="M63 47 H75" stroke="#95b39b" stroke-dasharray="2 3"/>
+    <path d="M76 42 L88 41 L88 52 L76 51Z" fill="#b5c3b7" stroke="#dbe5d7"/>
+    <rect x="87" y="37" width="31" height="20" rx="5" fill="#455149" stroke="#b4c3b5"/>
+    <path d="M118 44 H144 M118 50 H144" stroke="#91a396"/>
+    <path d="M102 68 C90 66 89 26 100 23 C105 22 109 27 110 31" stroke="#e9c677" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M105 29 L110 33 L113 27" stroke="#e9c677" fill="none" stroke-linecap="round"/>
+  </g>
+</svg>
