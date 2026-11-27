@@ -1,5 +1,6 @@
 """Build the local preview, or render the published firmware tags for GitHub Pages."""
 import argparse
+import hashlib
 from html import escape
 from html.parser import HTMLParser
 from pathlib import Path
@@ -9,6 +10,7 @@ from string import Template
 import subprocess
 from tempfile import TemporaryDirectory
 from urllib.parse import unquote, urlsplit
+from urllib.request import urlopen
 
 from build_usb_probe import build_site as build_usb_checker
 
@@ -18,6 +20,11 @@ REPO = "colombod/dnd-companion"
 VERSION = re.compile(r"(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)")
 GUIDE = ROOT / "guide"
 ASSET = re.compile(r"!\[[^\]]*\]\((screens/guide/[a-z0-9-]+\.png)\)")
+# Reviewed installation errata for firmware whose release tag is already public.
+INSTALL_REVISIONS = {"v0.1.5": "b63dd02fa7ca81b9add932d2a12e4d0e601f5ebe"}
+USB_ZIP = "first-usb-0.1.5.zip"
+USB_URL = f"https://github.com/colombod/dnd-companion-firmware/releases/download/v0.1.5/{USB_ZIP}"
+USB_SHA256 = "b0f27986f2f9cfd678623dd0c13dd4fe6c5b45b985ed166b99aa1847f0dab9c2"
 
 
 class PageLinks(HTMLParser):
@@ -53,10 +60,22 @@ def check_links(site):
                 raise ValueError(f"Missing section in {path.name}: {url}")
 
 
-def content(path, tag):
-    if tag is None:
+def content(path, revision):
+    if revision is None:
         return (ROOT / path).read_bytes()
-    return subprocess.check_output(["git", "show", f"refs/tags/{tag}:{path}"], cwd=ROOT)
+    return subprocess.check_output(["git", "show", f"{revision}:{path}"], cwd=ROOT)
+
+
+def copy_first_usb_zip(directory):
+    cached = BUILD / USB_ZIP
+    if cached.exists():
+        data = cached.read_bytes()
+    else:
+        with urlopen(USB_URL, timeout=60) as response:
+            data = response.read()
+    if hashlib.sha256(data).hexdigest() != USB_SHA256:
+        raise ValueError(f"Checksum mismatch for {USB_ZIP}")
+    (directory / USB_ZIP).write_bytes(data)
 
 
 def released_tags():
@@ -76,7 +95,8 @@ def page(target, prefix, title, body, nav):
 
 
 def render_version(output, tag):
-    version = content("firmware/VERSION", tag).decode().strip()
+    release = f"refs/tags/{tag}" if tag else None
+    version = content("firmware/VERSION", release).decode().strip()
     if not VERSION.fullmatch(version) or (tag and tag != "v" + version):
         raise ValueError(f"Firmware version {version!r} does not match {tag!r}")
     path = f"guide/v{version}" if tag else f"preview/v{version}"
@@ -90,19 +110,33 @@ def render_version(output, tag):
         ("docs/RULES.md", "rules.html", "Rulebooks", True),
     ]
     pages = {}
+    assets = {}
     for source, filename, title, excerpt in guides:
-        body = content(source, tag).decode()
+        revision = INSTALL_REVISIONS.get(tag, release) if filename == "install.html" else release
+        body = content(source, revision).decode()
         if excerpt:
             sections = re.findall(r"<!-- player-guide:start -->(.*?)<!-- player-guide:end -->", body, re.S)
             if not sections:
                 raise ValueError(f"Missing player guide sections in {source}")
             body = "\n\n".join(sections)
+        refs = set(ASSET.findall(body))
+        if filename == "install.html":
+            factory_tool = "install/prepare_first_usb_015.py"
+            if f"]({factory_tool})" in body:
+                refs.add(factory_tool)
+            if f"]({USB_URL})" in body:
+                copy_first_usb_zip(directory)
+                body = body.replace(f"]({USB_URL})", f"]({USB_ZIP})")
+        for asset in refs:
+            data = content("docs/" + asset, revision)
+            if asset in assets and assets[asset] != data:
+                raise ValueError(f"Conflicting versions of {asset} in guide {version}")
+            assets[asset] = data
         pages[filename] = (title, body)
-    assets = {asset for _, body in pages.values() for asset in ASSET.findall(body)}
-    for asset in sorted(assets):
+    for asset, data in assets.items():
         dest = directory / asset
         dest.parent.mkdir(parents=True, exist_ok=True)
-        dest.write_bytes(content("docs/" + asset, tag))
+        dest.write_bytes(data)
     nav = (f'<span>{label}</span><a href="install.html">Install</a><a href="index.html">Manual</a>'
            '<a href="features.html">Features</a><a href="rules.html">Rulebooks</a>'
            '<a href="../../index.html">All versions</a>')
@@ -131,7 +165,8 @@ def main():
         guides = [render_version(output, tag) for tag in tags]
         first, label = guides[0]
         (output / "guide.css").write_bytes((GUIDE / "guide.css").read_bytes())
-        (output / "dragon-eye.jpg").write_bytes(content("docs/screens/art/dragon-eye.jpg", tags[0]))
+        latest = f"refs/tags/{tags[0]}" if tags[0] else None
+        (output / "dragon-eye.jpg").write_bytes(content("docs/screens/art/dragon-eye.jpg", latest))
         links = "".join(f'<li><a href="{url}/index.html">{name}</a></li>' for url, name in guides)
         home = Template((GUIDE / "home.html").read_text()).substitute(first=first, label=label, links=links)
         page(output / "index.html", "", "Player guides", home, '<a href="#versions">Firmware versions</a>')
