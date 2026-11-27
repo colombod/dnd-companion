@@ -9,9 +9,16 @@ li button,.alt{background:transparent;border:1px solid #786953;color:#eed9b1;fon
 ul{list-style:none;padding:0}li{padding:.45em 0}li small{display:block;margin:.15em 0}summary{cursor:pointer;padding:1em 0}
 input[type=checkbox]{display:inline;width:auto}.inline{margin-bottom:.7em}dialog{border:1px solid #786953;border-radius:1em;width:min(80vw,24rem);background:#191e2a;color:inherit}
 #crop canvas{display:block;width:min(65vw,36vh,300px);height:auto;border-radius:50%;touch-action:none;margin:auto;background:#111521}
+[hidden]{display:none!important}
 #crop{max-height:90dvh;overflow:auto}#crop input[type=range]{padding:0}
 </style><h1>{{html:Dial setup}}</h1><p id="wifi" class="muted">{{html:Reading connection…}}</p>
 <label>{{html:Language}}<select id="language"><option value="en" lang="en">English</option><option value="it" lang="it">Italiano</option><option value="es" lang="es">Español</option></select></label>
+<section><details id="network"><summary>{{html:Table Wi-Fi}}</summary><p id="netmsg" role="status"></p><p id="wifiAction" role="status"></p>
+<ul id="saved"></ul><button class="alt" id="scan">{{html:Scan nearby networks}}</button>
+<form id="connect"><label>{{html:Nearby Wi-Fi}}<select id="nearby"><option value="">{{html:Enter another network…}}</option></select></label>
+<label id="manual">{{html:Network name}}<input name="ssid" maxlength="32" id="ssid"></label>
+<label>{{html:Password}}<input type="password" name="pass" maxlength="64" id="password" autocomplete="off"></label>
+<label class="inline"><input type="checkbox" id="show"> {{html:Show password}}</label><button id="join">{{html:Connect dial}}</button><button class="alt" type="button" id="store">{{html:Save network}}</button></form></details></section>
 <section id="review" hidden><h2>{{html:Review sheet update}}</h2><p id="before"></p><p id="after"></p><small id="revision"></small><p>
 <button id="apply">{{html:Apply update}}</button><button class="alt" id="keep">{{html:Keep current}}</button></p></section>
 <section><h2>{{html:Character picker}}</h2><label>{{html:Show in the picker}}<select id="pickerArt"><option value="both">{{html:Background + icon}}</option><option value="icon">{{html:Icon only}}</option><option value="background">{{html:Background only}}</option></select></label></section>
@@ -20,22 +27,16 @@ input[type=checkbox]{display:inline;width:auto}.inline{margin-bottom:.7em}dialog
 <dialog id="crop"><h2>{{html:Crop background}}</h2><canvas id="preview" width="360" height="360" aria-label="{{html:Round crop preview}}"></canvas><p><small>{{html:Drag to frame the artwork. Only this 360 × 360 crop goes to the dial.}}</small></p><label>{{html:Zoom}}<input id="zoom" type="range" min="1" max="4" value="1" step="0.02"></label><button id="useCrop">{{html:Use crop}}</button><button id="cancelCrop" class="alt">{{html:Cancel}}</button></dialog>
 <input type="file" id="choosePhoto" accept="image/*" hidden style="display:none"><dialog id="editor"><form id="edit"><h2>{{html:Edit character link}}</h2><label id="editName" for="editURL"></label><input id="editURL" name="link" type="url" required><input type="hidden" name="id" id="editId">
 <button>{{html:Check link}}</button><button type="button" class="alt" id="cancel">{{html:Cancel}}</button></form></dialog>
-<section><details id="network"><summary>{{html:Table Wi-Fi}}</summary><p id="netmsg"></p>
-<ul id="saved"></ul><button class="alt" id="scan">{{html:Scan nearby networks}}</button>
-<form id="connect"><label>{{html:Nearby Wi-Fi}}<select id="nearby"><option value="">{{html:Enter another network…}}</option></select></label>
-<label id="manual">{{html:Network name}}<input name="ssid" maxlength="32" id="ssid"></label>
-<label>{{html:Password}}<input type="password" name="pass" maxlength="64" id="password" autocomplete="off"></label>
-<label class="inline"><input type="checkbox" id="show"> {{html:Show password}}</label><button>{{html:Connect dial}}</button></form></details></section>
 <p id="message" role="status"></p>
 <script>
-const el=id=>document.getElementById(id);let state={},first=true;const last={};
+const el=id=>document.getElementById(id);let state={},first=true,requestNumber=0,wifiBusy=false;const last={};
 const make=(tag,text)=>{const n=document.createElement(tag);n.textContent=text;return n};
 const btn=(title,fn)=>{const b=make('button',title);b.type='button';b.onclick=fn;return b};
 function changed(key,value){const str=JSON.stringify(value);if(last[key]===str)return false;last[key]=str;return true}
 async function post(path,fields={}){try{const r=await fetch(path,{method:'POST',body:new URLSearchParams(fields)});
 el('message').textContent=await r.text();await update();return r.ok}catch{el('message').textContent={{js:Reconnect to the dial and try again.}};return false}}
 function edit(id,name){el('editId').value=id;el('editName').textContent=name;el('editURL').value='https://www.dndbeyond.com/characters/'+id;el('editor').showModal()}
-async function update(){try{const r=await fetch('/status',{cache:'no-store'});if(!r.ok)return;const s=await r.json();state=s;
+async function update(){const request=++requestNumber;try{const r=await fetch('/status',{cache:'no-store'});if(!r.ok)throw Error();const s=await r.json();if(request!==requestNumber)return;state=s;
 const artworkPending=artBusy || waitingPhotos.size>0 || !!document.querySelector("dialog[open]");
 language.disabled=changingLanguage || artworkPending;
 if(s.language && s.language!==document.documentElement.lang && !language.disabled){location.reload();return}
@@ -49,13 +50,34 @@ if(background)li.append(btn({{js:Remove background}},()=>{if(confirm({{js:Remove
 if(hasAvatar)li.append(btn({{js:Refresh profile icon}},()=>remoteArt(id,source)));
 }return li}));
 if(changed('jobs',s.jobs))el('jobs').replaceChildren(...s.jobs.map(([id,msg])=>make('li',id+' · '+msg)));
-if(changed('saved',s.saved))el('saved').replaceChildren(...s.saved.map(ssid=>{const li=make('li',ssid);li.append(document.createElement('br'),btn({{js:Connect saved}},()=>post('/wifi',{ssid,reuse:'1'})),btn({{js:Forget}},()=>{if(confirm({{js:Forget }}+ssid+{{js: on this dial?}}))post('/wifi/forget',{ssid})}));return li}));
+el('join').disabled=wifiBusy||!!s.connecting;el('store').disabled=wifiBusy;
+if(changed('saved',[s.saved,s.connecting||'',wifiBusy]))el('saved').replaceChildren(...s.saved.map(ssid=>{const li=make('li',ssid);
+const connect=btn({{js:Connect saved}},()=>wifiPost('/wifi',{ssid,reuse:'1'}));
+connect.disabled=wifiBusy||!!s.connecting;
+const forget=btn({{js:Forget}},()=>{
+ const yes=btn({{js:Forget network}},()=>wifiPost('/wifi/forget',{ssid}));
+ const no=btn({{js:Cancel}},()=>li.replaceChildren(ssid,document.createElement('br'),connect,forget));
+ li.replaceChildren(make('span',{{js:Forget }}+ssid+{{js: on this dial?}}),document.createElement('br'),yes,no);
+});
+forget.disabled=wifiBusy;
+li.append(document.createElement('br'),connect,forget);return li}));
 if(changed('nearby',s.nearby)){const select=el('nearby'),prev=select.value;select.replaceChildren(new Option({{js:Enter another network…}},''),
 ...s.nearby.map(([name,signal,locked])=>new Option(name+(locked?'':{{js: (open)}}),name)));select.value=prev;el('manual').hidden=!!select.value}
-el('scan').disabled=s.scanning;el('scan').textContent=s.scanning?{{js:Scanning…}}:{{js:Scan nearby networks}};
+el('scan').disabled=wifiBusy||s.scanning||!!s.connecting;el('scan').textContent=s.scanning?{{js:Scanning…}}:{{js:Scan nearby networks}};
 el('review').hidden=!s.review;if(s.review){el('before').textContent={{js:On your dial: }}+s.review.before;el('after').textContent={{js:From Beyond: }}+s.review.after;el('revision').textContent=s.review.revision?{{js:Source updated }}+s.review.revision:''}
 processArt(s);
-}catch{}}
+}catch{if(request===requestNumber)el('wifi').textContent={{js:Reconnect to the dial and try again.}}}}
+async function wifiPost(path,fields={}){
+ if(wifiBusy)return false;
+ wifiBusy=true;++requestNumber;
+ const feedback=el('wifiAction');feedback.textContent={{js:Working…}};
+ for(const b of el('network').querySelectorAll('button'))b.disabled=true;
+ try{
+  const r=await fetch(path,{method:'POST',body:new URLSearchParams(fields)});
+  feedback.textContent=await r.text();return r.ok;
+ }catch{feedback.textContent={{js:Reconnect to the dial and try again.}};return false}
+ finally{wifiBusy=false;delete last.saved;await update()}
+}
 const waitingPhotos=new Map(), tried=new Set();let photoTarget=0,artBusy=false;
 async function loadImage(file){
  if(!file||file.size>16*1024*1024)throw Error({{js:Choose an image under 16 MiB.}});
@@ -124,11 +146,14 @@ el('add').onsubmit=async e=>{e.preventDefault();const link=e.target.elements.lin
  try{const blob=await cropBackground(file);if(!blob)return;waitingPhotos.set(id,blob)}catch(err){el('message').textContent=err.message;return;}}
  if(await post('/character',{link}))el('add').reset();else if(id)waitingPhotos.delete(id)};
 el('edit').onsubmit=async e=>{e.preventDefault();if(await post('/character/edit',new FormData(e.target)))el('editor').close()};
-el('cancel').onclick=()=>el('editor').close();el('scan').onclick=()=>post('/wifi/scan');
+el('cancel').onclick=()=>el('editor').close();el('scan').onclick=()=>wifiPost('/wifi/scan');
 el('nearby').onchange=()=>{el('manual').hidden=!!el('nearby').value;el('password').value=''};
 el('show').onchange=()=>el('password').type=el('show').checked?'text':'password';
-el('connect').onsubmit=async e=>{e.preventDefault();const ssid=el('nearby').value||el('ssid').value,pass=el('password').value;
-if(await post('/wifi',{ssid,pass,reuse:!pass&&state.saved.includes(ssid)?'1':'0'})){el('password').value='';el('show').checked=false;el('password').type='password'}};
+async function submitNetwork(path){const ssid=el('nearby').value||el('ssid').value,pass=el('password').value;
+if(!ssid){el('ssid').focus();return}
+if(await wifiPost(path,{ssid,pass,reuse:!pass&&(state.saved||[]).includes(ssid)?'1':'0'})){el('password').value='';el('show').checked=false;el('password').type='password'}};
+el('connect').onsubmit=e=>{e.preventDefault();submitNetwork('/wifi')};
+el('store').onclick=()=>submitNetwork('/wifi/save');
 const decide=apply=>{if(state.review)post('/review',{id:state.review.ticket,apply})};
 el('apply').onclick=()=>decide('1');el('keep').onclick=()=>decide('0');update();setInterval(update,2000);
 </script></html>

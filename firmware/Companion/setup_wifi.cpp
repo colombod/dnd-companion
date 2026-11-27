@@ -68,6 +68,11 @@ void wifiBegin() {
         const char *error = connectNetwork(server.arg("ssid"),server.arg("pass"),server.arg("reuse")=="1");
         server.send(error?400:202,"text/plain",ui::tr(error?error:"Connecting to the selected network."));
     });
+    server.on("/wifi/save", HTTP_POST, [] {
+        if (!fromSetupNetwork()) return;
+        const char *error=saveNetwork(server.arg("ssid"),server.arg("pass"),server.arg("reuse")=="1");
+        server.send(error?400:200,"text/plain",ui::tr(error?error:"Network saved"));
+    });
     server.on("/wifi/scan", HTTP_POST, [] {
         if (!fromSetupNetwork()) return;
         scanNetworks(); server.send(202,"text/plain",ui::tr("Scanning nearby networks."));
@@ -129,7 +134,7 @@ void setupClose() {
     setupActive = false;
 }
 void setupPoll() {
-    networksPoll();
+    networksPoll(setupActive);
     photoPoll();
     if (!setupActive) return;
     server.handleClient();

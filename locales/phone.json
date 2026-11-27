@@ -1,4 +1,7 @@
 {
+  "Working…": {"it": "Attendi…", "es": "Un momento…"},
+  "Save network": {"it": "Salva rete", "es": "Guardar red"},
+  "Forget network": {"it": "Dimentica rete", "es": "Olvidar red"},
   "Dial setup": {"it": "Configura il dispositivo", "es": "Configura el dial"},
   "Language": {"it": "Lingua", "es": "Idioma"},
   "Reading connection…": {"it": "Verifica della connessione…", "es": "Comprobando la conexión…"},

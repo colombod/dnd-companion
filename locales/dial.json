@@ -1,4 +1,13 @@
 {
+  "Incomplete compressed sheet": {"it": "Scheda compressa incompleta", "es": "Ficha comprimida incompleta"},
+  "Unsupported sheet encoding": {"it": "Formato della scheda non supportato", "es": "Formato de ficha no compatible"},
+  "Sheet download interrupted": {"it": "Download della scheda interrotto", "es": "Descarga de la ficha interrumpida"},
+  "Sheet download timed out": {"it": "Tempo di download scaduto", "es": "Se agotó el tiempo de descarga"},
+  "Sheet exceeds download size": {"it": "Scheda oltre il limite di download", "es": "La ficha supera el límite de descarga"},
+  "Check public character link": {"it": "Verifica il link pubblico", "es": "Comprueba el enlace público"},
+  "Beyond is busy. Try again later.": {"it": "Beyond è occupato. Riprova più tardi.", "es": "Beyond está ocupado. Inténtalo más tarde."},
+  "Network saved": {"it": "Rete salvata", "es": "Red guardada"},
+  "A connection is in progress.": {"it": "Connessione in corso.", "es": "Conexión en curso."},
   "Previous firmware": {"it": "Firmware precedente", "es": "Firmware anterior"},
   "Restore firmware?": {"it": "Ripristinare?", "es": "¿Restaurar?"},
   "Restore now": {"it": "Ripristina ora", "es": "Restaurar ahora"},

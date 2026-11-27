@@ -2,7 +2,7 @@
 
 [Install, update or restore your dial](INSTALL.md) · [What the dial can do](FEATURES.md) · [Gesture reference](#gesture-reference)
 
-**Start at the character sheet.** Tap the portrait whenever you want a handful of dice. Swipe sideways or turn the ring to change the two shortcuts beside it. A right swipe on a detail screen takes you back one step.
+**Start at the character sheet.** Tap **Dice** at the lower edge of the portrait whenever you want a handful of dice. Swipe sideways or turn the ring to change the two shortcuts beside it. A right swipe on a detail screen takes you back one step.
 
 | First pair | Second pair | Third pair | Fourth pair | Fifth pair |
 | --- | --- | --- | --- | --- |
@@ -14,7 +14,7 @@ The Forge, Health, Effects, Pack and Turn illustrations are Mac renders of the d
 
 ## Gesture reference
 
-**To reach your hit points:** start on the open character sheet, slide one finger upward across the glass, then lift. A stationary tap on the portrait opens Dice. If swiping is awkward, turn the ring until **Health / Effects** appears and tap **Health** on the left. Both routes open the same HP screen.
+**To reach your hit points:** start on the open character sheet, slide one finger upward across the glass, then lift. The portrait and name give you room to start a swipe. Tap the labeled **Dice** control to open the tray. If swiping is awkward, turn the ring until **Health / Effects** appears and tap **Health** on the left. Both routes open the same HP screen.
 
 ### From the character sheet
 
@@ -22,8 +22,8 @@ The Forge, Health, Effects, Pack and Turn illustrations are Mac renders of the d
 | --- | --- | --- |
 | Character picker | Turn the ring or swipe left/right to browse. Tap the portrait to open the displayed character. | That character’s sheet |
 | Open sheet | Swipe **up** for Health or **down** for the character picker. Start inside the screen, away from the rim, and keep contact until the end of the stroke. | Hit points or character selection |
-| Open sheet | Swipe left for the next pair or right for the previous pair. Turning the ring or tapping the small left/right chevrons also pages. Tap a side shortcut to open it. | Checks/Saves → Spells/Actions → Magic/Rest → Health/Effects → Pack/Turn |
-| Open sheet | Tap the portrait, then lift. | Mixed dice tray |
+| Open sheet | Swipe left for the next pair or right for the previous pair. Turning the ring also pages. Tap a side shortcut to open it. | Checks/Saves → Spells/Actions → Magic/Rest → Health/Effects → Pack/Turn |
+| Open sheet | Tap the **Dice** control below the portrait’s center. | Mixed dice tray |
 | Top status arc | Tap the Wi-Fi name or power indicator on the picker or sheet. Tap **Language** or **Firmware** for its controls. | Device status |
 | Bottom arc | Tap **Phone setup** on the picker or **Refresh sheet** on an open sheet. | Setup QR or an online check for this character |
 | Detail screen | Swipe right or tap the curved return caption. During a roll animation, wait for the result first. | The parent screen. On the character sheet, a right swipe pages the shortcuts instead. |
@@ -89,7 +89,7 @@ Tap the top arc on the character picker or sheet, then **Language**. Tap **Engli
 ## Set up at the table
 
 1. Open **Phone setup** on the picker. Scan the QR code with your phone and join the dial’s network. If setup does not open automatically, scan the second QR after the phone joins.
-2. In **Table Wi-Fi**, select a nearby 2.4 GHz network or enter a hidden network manually. **Show password** reveals what you type. A successful connection saves the network. Use **Connect saved** to reuse it or **Forget** to delete it from the dial.
+2. In **Table Wi-Fi**, select a nearby 2.4 GHz network or enter a hidden network manually. **Show password** reveals what you type. Tap **Connect dial** to join and save a working connection, or **Save network** to store credentials for later. **Connect saved** reuses them. To delete one, tap **Forget** on its row, check the network name, then tap **Forget network**. **Cancel** keeps it.
 3. In **Your characters**, paste one character link per line and tap **Add to dial**. Keep setup open to see the result. **Edit link** checks a replacement before changing the entry. **Remove** deletes the dial’s local entry. Your D&D Beyond sheet stays under your control.
 4. Tap **Done** on the dial. Turn the wheel or swipe to browse, then tap a portrait. Swipe down on the character sheet to return to Characters.
 
@@ -100,8 +100,12 @@ Tap the top arc on the character picker or sheet, then **Language**. Tap **Engli
 
 | 3 · Connect the dial to table Wi-Fi | 4 · Add the character |
 | --- | --- |
-| ![Phone controls for saved networks, nearby Wi-Fi, password visibility and Connect dial](screens/guide/phone-wifi.png) | ![Phone form with D&D Beyond links, optional background and Add to dial](screens/guide/phone-links.png) |
-| Pick the network and tap **Connect dial**. Next time, use **Connect saved**. | Paste an individually accessible character link, tap **Add to dial**, and wait for the import result. |
+| ![Table Wi-Fi with the nearby network Game Night selected and the Connect dial and Save network buttons below its password field](screens/guide/phone-wifi.png) | ![Phone form with D&D Beyond links, optional background and Add to dial](screens/guide/phone-links.png) |
+| Choose **Connect dial** to join now or **Save network** to keep it for later. | Paste an individually accessible character link, tap **Add to dial**, and wait for the import result. |
+
+**Forget a saved network.** Tap **Forget** next to its name. In this example, **Forget network** removes Game Night from the dial. The Lantern stays saved.
+
+![Phone asking “Forget Game Night on this dial?” with Forget network and Cancel under that row](screens/guide/phone-forget.png)
 
 ## Profile icon and alternate background
 
@@ -124,7 +128,7 @@ Drag the subject inside the circle before you tap **Use crop**. The phone discar
 
 ## Battery and Wi-Fi
 
-The top arc shows the Wi-Fi symbol and connected network name, or **Offline**. A long name shortens to leave room for power and the picker position. Tap the arc to read the full name and supply voltage. The bottom arc opens **Phone setup** in the picker or **Refresh sheet** on the character sheet. Both arcs accept taps up to 48 pixels inward. On the picker, tap the portrait to open the sheet. On the sheet, tap it to open the dice tray. **USB** means a
+The top arc shows the Wi-Fi symbol and connected network name, or **Offline**. A long name shortens to leave room for power and the picker position. Tap the arc to read the full name and supply voltage. The bottom arc opens **Phone setup** in the picker or **Refresh sheet** on the character sheet. Both arcs accept taps up to 48 pixels inward. On the picker, tap the portrait to open the sheet. On the sheet, tap **Dice** to open the tray. **USB** means a
 USB host is connected. A high supply voltage without a host is shown as
 **External**. On battery, the percentage is a voltage-based estimate. The S3
 has no documented signal for actual charge current or completion, so the dial
@@ -132,7 +136,7 @@ shows **Charging status unavailable** while plugged in.
 
 ## Refresh and play offline
 
-Tap **Refresh sheet** while connected. The dial checks an available HTTP version tag first and skips rapid repeat checks. Some D&D Beyond responses carry their revision inside the full sheet and require a download to compare. When a change is detected, review the old and new summaries and choose **Apply update** or **Keep current**, on the dial or phone. A failed or declined update keeps the previously saved sheet available offline.
+Tap **Refresh sheet** while connected. The dial checks an available HTTP version tag first and skips rapid repeat checks. Some D&D Beyond responses carry their revision inside the full sheet and require a download to compare. When a change is detected, review the old and new summaries and choose **Apply update** or **Keep current**, on the dial or phone. The cache arc shows how many KiB have arrived. The dial requests a compressed copy when available, so this count can be smaller than the full character sheet. It retries an early network interruption once. If the check fails or you decline the update, the previously saved sheet stays available offline.
 
 ![Phone update review comparing Mira at Wizard 4 with Wizard 5, with Apply update and Keep current choices](screens/guide/phone-review.png)
 
@@ -144,7 +148,7 @@ The name curves above the portrait, with total level and proficiency on the next
 
 ## Roll a check or a save
 
-Swipe sideways on the sheet, tap a chevron beside Dice, or turn the ring to switch between five pairs of landmarks. On the first pair, tap **Checks** on the left of the portrait or **Saves** on the right. The six saving throws fit on one face. For a check, tap a named skill such as **History** or **Arcana**. Swipe vertically or turn the ring to browse three groups of six skills, followed by the six plain ability checks. Each shows your character’s modifier. An older cached character may need one online refresh to fill in these numbers.
+Swipe sideways on the sheet or turn the ring to switch between five pairs of landmarks. On the first pair, tap **Checks** on the left of the portrait or **Saves** on the right. The six saving throws fit on one face. For a check, tap a named skill such as **History** or **Arcana**. Swipe vertically or turn the ring to browse three groups of six skills, followed by the six plain ability checks. Each shows your character’s modifier. An older cached character may need one online refresh to fill in these numbers.
 
 Choose the circumstances by touch. Tap **Adv.**, **Normal** or **Disadv.**. You can also swipe up for advantage or down for disadvantage. Tap the large modifier or spin in either direction. Both dice appear when two were rolled, along with the kept face, modifier and total. Tap the total to ready another roll. A Constitution save with a concentration-specific benefit shows a reminder so you can choose advantage when appropriate. An unresolved modifier shows **Check your sheet**.
 
@@ -199,7 +203,7 @@ The dial allows each effect once per roll. Apply each qualifying die before sett
 
 ## Build a dice pool
 
-Tap your portrait on any page of the character sheet, or tap the central **Dice tray** die on a check or save selector. All seven sizes are on one face. To build **3d6 + 1d8**, tap d6 three times and d8 once. The badges and center formula update as you touch.
+Tap **Dice** on any page of the character sheet, or tap the central **Dice tray** die on a check or save selector. All seven sizes are on one face. To build **3d6 + 1d8**, tap d6 three times and d8 once. The badges and center formula update as you touch.
 
 - **Tap** adds one of that die in Add mode.
 - **Hold** removes one at 0.5 seconds and one every 0.5 seconds while you stay on the same die. Each removal gives a short pulse. Lift or slide off to stop. At zero, the pulse stops and releasing leaves the count at zero.
